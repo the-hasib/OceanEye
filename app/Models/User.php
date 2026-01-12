@@ -19,12 +19,12 @@ class User extends Authenticatable
         'email',
         'password',
         'role',          // <--- Added
-        'mobile',        // <--- Added
-        'license_no',    // <--- Added
-        'nid',           // <--- Added
-        'address',       // <--- Added
-        'service_id',    // <--- Added
-        'station_zone',  // <--- Added
+        'mobile',
+        'license_no',
+        'nid',
+        'address',
+        'service_id',
+        'station_zone',
     ];
 
     protected $hidden = [

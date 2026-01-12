@@ -132,7 +132,7 @@
         }
 
         .role-btn.active {
-            background: #00d2ff;
+            background: rgba(0, 210, 255, 0.3);
             color: #000;
             box-shadow: 0 0 15px rgba(0, 210, 255, 0.6);
         }
@@ -165,7 +165,7 @@
         }
 
         input:focus {
-            border-color: #00d2ff;
+            border-color: #f2f5f6;
             background: rgba(255, 255, 255, 0.2);
         }
 
