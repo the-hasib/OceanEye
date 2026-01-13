@@ -13,20 +13,19 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Stores Full Name or Officer Name
-
-            // Email is optional for fishermen
+            $table->string('name');
             $table->string('email')->unique()->nullable();
-
-            // Mobile number for fishermen
             $table->string('mobile')->nullable();
-
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
 
             // --- Role Management ---
-            // Distinguishes between 'fisherman' and 'coast_guard'
             $table->string('role')->default('fisherman');
+
+            // --- Status Management (Added Step) ---
+            // pending = waiting for admin approval
+            // approved = can login
+            $table->string('status')->default('pending');
 
             // --- Fisherman Specific Fields ---
             $table->string('license_no')->nullable();

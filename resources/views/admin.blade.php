@@ -131,26 +131,49 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Rahim Mia</td>
-                    <td>Fisherman</td>
-                    <td>01700000000</td>
-                    <td style="color: #ffd24c;">Pending</td>
-                    <td>
-                        <button class="btn approve" onclick="approve(this)">Approve</button>
-                        <button class="btn reject" onclick="reject(this)">Reject</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Officer Karim</td>
-                    <td>Coast Guard</td>
-                    <td>CG-8821</td>
-                    <td style="color: #ffd24c;">Pending</td>
-                    <td>
-                        <button class="btn approve" onclick="approve(this)">Approve</button>
-                        <button class="btn reject" onclick="reject(this)">Reject</button>
-                    </td>
-                </tr>
+                @forelse($pending_users as $user)
+                    <tr>
+                        <td>{{ $user->name }}</td>
+
+                        <td>
+                            @if($user->role == 'fisherman')
+                                <span style="color: #3bbcff;">Fisherman</span>
+                            @else
+                                <span style="color: orange;">Coast Guard</span>
+                            @endif
+                        </td>
+
+                        <td>
+                            {{ $user->mobile ?? $user->email }}
+                        </td>
+
+                        <td style="color: #ffd24c; font-weight: bold;">
+                            {{ ucfirst($user->status) }}
+                        </td>
+
+                        <td>
+                            <a href="{{ route('admin.approve', $user->id) }}"
+                               class="btn approve"
+                               style="text-decoration: none; display: inline-block;"
+                               onclick="return confirm('Are you sure you want to Approve this user?')">
+                                Approve
+                            </a>
+
+                            <a href="{{ route('admin.reject', $user->id) }}"
+                               class="btn reject"
+                               style="text-decoration: none; display: inline-block;"
+                               onclick="return confirm('Are you sure you want to DELETE this user?')">
+                                Reject
+                            </a>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: gray; padding: 20px;">
+                            No pending approvals at the moment.
+                        </td>
+                    </tr>
+                @endforelse
                 </tbody>
             </table>
             <p class="note">Users remain inactive until approved.</p>

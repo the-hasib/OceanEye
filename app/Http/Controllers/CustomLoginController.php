@@ -7,41 +7,60 @@ use Illuminate\Support\Facades\Auth;
 
 class CustomLoginController extends Controller
 {
-    // Handle the login logic
+    // 1. Show the Login Page (New Function Added)
+    public function showLoginForm()
+    {
+        return view('login');
+    }
+
+    // 2. Handle the login logic
     public function login(Request $request)
     {
-        // 1. Validate Input
+        // Validate Input
         $request->validate([
-            'email' => 'required', // Can be Mobile (Fisherman) or Email (Coast Guard)
+            'email' => 'required',
             'password' => 'required',
         ]);
 
-        // 2. Prepare Credentials based on Input Type
+        // Prepare Credentials
         $input = $request->email;
         $credentials = [];
 
         if (is_numeric($input)) {
-            // Logic for Fisherman (Mobile Number)
-            // Convert mobile to the dummy email format used in registration
+            // Fisherman Logic (Mobile)
             $credentials['email'] = $input . '@oceaneye.local';
             $credentials['password'] = $request->password;
         } else {
-            // Logic for Coast Guard (Standard Email)
+            // Coast Guard Logic (Email)
             $credentials['email'] = $input;
             $credentials['password'] = $request->password;
         }
 
-        // 3. Attempt Login
+        // Attempt Login
         if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
 
-            // SUCCESS: Redirect to dashboard with Welcome Message
-            return redirect()->route('dashboard')->with('success', 'Welcome to OceanEye');
+            // Check Status
+            $user = Auth::user();
+
+            if ($user->status == 'pending') {
+                // If pending, force logout
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return back()->withErrors([
+                    'login_error' => 'Account Pending! Please wait for Admin approval.',
+                ])->withInput();
+            }
+
+            // If Approved, Proceed
+            $request->session()->regenerate();
+            return redirect()->route('dashboard')->with('success', 'Welcome back!');
         }
 
-        // 4. FAILURE: Wrong Password or Not Registered
+        // Failure
         return back()->withErrors([
-            'login_error' => 'Invalid mobile/email or password. Please register if you are new.',
-        ])->withInput(); // Keep the input field filled
+            'login_error' => 'Invalid mobile/email or password.',
+        ])->withInput();
     }
 }

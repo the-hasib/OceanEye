@@ -18,7 +18,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',          // <--- Added
+        'role',
+        'status',
         'mobile',
         'license_no',
         'nid',

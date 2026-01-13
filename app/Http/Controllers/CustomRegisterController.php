@@ -74,6 +74,6 @@ class CustomRegisterController extends Controller
 
         // 5. Redirect to Login Page with Success Message
         // We use 'with' to flash a session message
-        return redirect()->route('login')->with('success', 'Registration successful! Please login.');
+        return redirect()->route('login')->with('success', 'Registration successful! Your account is Pending. Please login after 2 minutes.');
     }
 }
