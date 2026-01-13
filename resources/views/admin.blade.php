@@ -4,116 +4,185 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - OceanEye</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
-        /* --- ADMIN DASHBOARD CSS --- */
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 0; }
+        /* --- CSS FROM YOUR FILE --- */
+        * { margin:0; padding:0; box-sizing:border-box; font-family: "Segoe UI", sans-serif; }
 
-        /* Navbar */
-        .navbar {
-            background: #2c3e50; /* Dark Blue-Grey for Admin */
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        body { background: radial-gradient(circle at top, #0b2740, #061726); color:#eaf6ff; }
+
+        /* LAYOUT */
+        .admin-layout { display:flex; min-height:100vh; }
+
+        /* SIDEBAR */
+        .sidebar { width:240px; background:#0c3558; padding:20px; flex-shrink:0; display: flex; flex-direction: column; }
+        .brand { font-size:22px; font-weight:700; margin-bottom:30px; color: white; }
+
+        .sidebar nav { display: flex; flex-direction: column; flex-grow: 1; }
+        .sidebar nav a, .sidebar nav button {
+            display:flex; align-items:center; gap:12px; padding:12px 14px;
+            margin-bottom:8px; color:#cfe9ff; text-decoration:none;
+            border-radius:10px; transition:.3s; background: none; border: none;
+            width: 100%; font-size: 16px; cursor: pointer; text-align: left;
         }
-        .logo { font-size: 24px; font-weight: bold; }
-        .logo span { font-size: 12px; background: #e74c3c; padding: 2px 8px; border-radius: 10px; margin-left: 5px; }
+        .sidebar nav a i, .sidebar nav button i { width:20px; text-align:center; }
 
-        .logout-btn {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: 0.3s;
-        }
-        .logout-btn:hover { background: #e74c3c; border-color: #e74c3c; }
+        .sidebar nav a:hover, .sidebar nav a.active, .sidebar nav button:hover { background:#134a73; }
 
-        /* Container */
-        .container { max-width: 1000px; margin: 30px auto; padding: 20px; }
-        h2 { color: #333; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
+        /* Logout Button specific */
+        .logout-form { margin-top: auto; }
+        .sidebar nav button.logout { background:#133b55; color: #ff5d4f; }
+        .sidebar nav button.logout:hover { background:#e74c3c; color: white; }
 
-        /* Grid */
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
+        /* MAIN */
+        .main { flex:1; padding:28px; }
 
-        /* Card */
-        .card {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: 0.3s;
-            cursor: pointer;
-            border-top: 5px solid #2c3e50;
-        }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+        /* TOP BAR */
+        .topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; }
+        .time-box { display:flex; gap:8px; align-items:center; opacity:.85; }
 
-        .card i { font-size: 40px; color: #2c3e50; margin-bottom: 15px; }
-        .card h3 { margin: 10px 0; color: #333; }
-        .card p { color: #777; font-size: 13px; }
+        /* SUMMARY CARDS */
+        .summary { display:grid; grid-template-columns: repeat(4, 1fr); gap:18px; margin-bottom:30px; }
+        .summary .card { background:#0f2f4a; padding:20px; border-radius:16px; position:relative; }
+        .summary .card::before { content:""; position:absolute; left:0; top:0; bottom:0; width:5px; border-radius:16px 0 0 16px; background:#3bbcff; }
 
-        /* SOS Alert Card (Special Style) */
-        .card.sos { border-top-color: #e74c3c; }
-        .card.sos i { color: #e74c3c; }
+        .summary .pending::before { background:#ffd24c; }
+        .summary .alert::before { background:#ff5d4f; }
 
+        .summary h4 { margin-bottom: 5px; opacity: 0.8; font-size: 14px; }
+        .summary p { font-size: 24px; font-weight: bold; }
+
+        /* PANEL */
+        .panel { background:#0f2f4a; padding:20px; border-radius:18px; }
+        .panel h2 { margin-bottom:14px; }
+
+        /* TABLE */
+        table { width:100%; border-collapse:collapse; }
+        thead { background:#124366; }
+        th,td { padding:12px; text-align:left; }
+        tbody tr { border-bottom:1px solid rgba(255,255,255,.08); }
+        .note { margin-top:12px; font-size:13px; opacity:.7; }
+
+        /* BUTTONS */
+        .btn { padding:6px 12px; border:none; border-radius:8px; cursor:pointer; color:white; }
+        .btn.approve { background:#2ecc71; }
+        .btn.reject { background:#e74c3c; }
     </style>
 </head>
 <body>
 
-<div class="navbar">
-    <div class="logo">OceanEye <span>ADMIN</span></div>
-    <div class="user-info">
-        Welcome, <b>{{ Auth::user()->name }}</b>
-        <form action="{{ route('logout') }}" method="POST" style="display:inline;">
-            @csrf
-            <button type="submit" class="logout-btn">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
-        </form>
-    </div>
+<div class="admin-layout">
+
+    <aside class="sidebar">
+        <div class="brand">🌊 OceanEye</div>
+        <nav>
+            <a href="#" class="active"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+            <a href="#"><i class="fa-solid fa-users"></i> Users</a>
+            <a href="#"><i class="fa-solid fa-triangle-exclamation"></i> SOS Monitor</a>
+            <a href="#"><i class="fa-solid fa-map"></i> Map</a>
+
+            <form action="{{ route('logout') }}" method="POST" class="logout-form">
+                @csrf
+                <button type="submit" class="logout">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </button>
+            </form>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <h1>Welcome, {{ Auth::user()->name }}</h1>
+            <div class="time-box">
+                <i class="fa-regular fa-clock"></i>
+                <span id="liveTime"></span>
+            </div>
+        </header>
+
+        <section class="summary">
+            <div class="card">
+                <h4>Total Users</h4>
+                <p>{{ \App\Models\User::count() }}</p> </div>
+            <div class="card pending">
+                <h4>Pending Approvals</h4>
+                <p>0</p>
+            </div>
+            <div class="card alert">
+                <h4>Active SOS</h4>
+                <p>0</p>
+            </div>
+            <div class="card">
+                <h4>Coast Guard Units</h4>
+                <p>{{ \App\Models\User::where('role', 'coast_guard')->count() }}</p> </div>
+        </section>
+
+        <section class="panel">
+            <h2>⏳ Pending User Approvals</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Mobile / ID</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Rahim Mia</td>
+                    <td>Fisherman</td>
+                    <td>01700000000</td>
+                    <td style="color: #ffd24c;">Pending</td>
+                    <td>
+                        <button class="btn approve" onclick="approve(this)">Approve</button>
+                        <button class="btn reject" onclick="reject(this)">Reject</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Officer Karim</td>
+                    <td>Coast Guard</td>
+                    <td>CG-8821</td>
+                    <td style="color: #ffd24c;">Pending</td>
+                    <td>
+                        <button class="btn approve" onclick="approve(this)">Approve</button>
+                        <button class="btn reject" onclick="reject(this)">Reject</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <p class="note">Users remain inactive until approved.</p>
+        </section>
+    </main>
+
 </div>
 
-<div class="container">
-    <h2>System Administration</h2>
+<script>
+    // LIVE CLOCK
+    function updateTime(){
+        document.getElementById("liveTime").innerText = new Date().toLocaleString("en-GB");
+    }
+    updateTime();
+    setInterval(updateTime,1000);
 
-    <div class="grid-container">
-        <div class="card">
-            <i class="fas fa-users-cog"></i>
-            <h3>Manage Users</h3>
-            <p>Add, remove or edit user roles.</p>
-        </div>
+    // APPROVAL DEMO Logic
+    function approve(btn){
+        if(confirm("Are you sure you want to approve this user?")) {
+            btn.closest("tr").remove();
+            // In future, this will call backend to update status
+            alert("User Approved (Demo)");
+        }
+    }
 
-        <div class="card sos">
-            <i class="fas fa-satellite-dish"></i>
-            <h3>SOS Monitor</h3>
-            <p>View active emergency signals.</p>
-        </div>
-
-        <div class="card">
-            <i class="fas fa-database"></i>
-            <h3>System Logs</h3>
-            <p>Check database and server health.</p>
-        </div>
-
-        <div class="card">
-            <i class="fas fa-ship"></i>
-            <h3>Vessel Database</h3>
-            <p>View all registered ships.</p>
-        </div>
-    </div>
-</div>
+    function reject(btn){
+        if(confirm("Are you sure you want to reject this user?")) {
+            btn.closest("tr").remove();
+            alert("User Rejected (Demo)");
+        }
+    }
+</script>
 
 </body>
 </html>
