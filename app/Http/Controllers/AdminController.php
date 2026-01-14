@@ -10,6 +10,7 @@ class AdminController extends Controller
     // 1. Load dashboard with pending users
     public function index()
     {
+        // Query
         // Fetch only users where status is 'pending'
         $pending_users = User::where('status', 'pending')->get();
 
@@ -25,7 +26,6 @@ class AdminController extends Controller
             $user->status = 'approved';
             $user->save();
         }
-
         return back()->with('success', 'User Approved Successfully!');
     }
 
@@ -33,11 +33,9 @@ class AdminController extends Controller
     public function reject($id)
     {
         $user = User::find($id);
-
         if ($user) {
             $user->delete();
         }
-
         return back()->with('error', 'User Rejected and Deleted.');
     }
 }
