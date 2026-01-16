@@ -81,26 +81,36 @@
         <div class="alert alert-error">{{ $errors->first() }}</div>
     @endif
 
-    <h2>📊 Dashboard Overview</h2>
-    <div class="grid-container">
-        <div class="card sos">
-            <i class="fas fa-exclamation-triangle"></i>
-            <h3>SOS Alert</h3>
-            <p>Send emergency signal.</p>
-        </div>
-        <div class="card">
-            <i class="fas fa-cloud-sun-rain"></i>
-            <h3>Weather</h3>
-            <p>Check storm warnings.</p>
-        </div>
-        <div class="card">
-            <i class="fas fa-fish"></i>
-            <h3>Log Catch</h3>
-            <p>Daily fishing report.</p>
-        </div>
-    </div>
+        <h2>📊 Dashboard Overview</h2>
+        <div class="grid-container">
 
-    <hr style="border: 0; border-top: 1px solid #ddd; margin: 30px 0;">
+            <form action="{{ route('sos.send') }}" method="POST" id="sosForm" style="display: contents;">
+                @csrf
+                <div class="card sos" onclick="confirmSOS()" style="cursor: pointer;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>SOS Alert</h3>
+                    <p>CLICK FOR EMERGENCY</p>
+                </div>
+            </form>
+            <div class="card">
+                <i class="fas fa-cloud-sun-rain"></i>
+                <h3>Weather</h3>
+                <p>Check storm warnings.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-fish"></i>
+                <h3>Log Catch</h3>
+                <p>Daily fishing report.</p>
+            </div>
+        </div>
+
+        <script>
+            function confirmSOS() {
+                if(confirm("Are you sure you want to send an SOS Emergency Signal? Coast Guard will be notified!")) {
+                    document.getElementById('sosForm').submit();
+                }
+            }
+        </script>
 
     <h2>🚤 Boat Management</h2>
 

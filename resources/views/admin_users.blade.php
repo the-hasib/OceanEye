@@ -79,7 +79,9 @@
 
             <a href="{{ route('admin.users') }}" class="active"><i class="fa-solid fa-users"></i> Users</a>
 
-            <a href="#"><i class="fa-solid fa-triangle-exclamation"></i> SOS Monitor</a>
+            <a href="{{ route('admin.sos') }}" class="{{ Request::routeIs('admin.sos') ? 'active' : '' }}">
+                <i class="fa-solid fa-triangle-exclamation"></i> SOS Monitor
+            </a>
             <a href="#"><i class="fa-solid fa-map"></i> Map</a>
             <a href="{{ route('admin.boats') }}"><i class="fa-solid fa-ship"></i> Boats</a>
             <form action="{{ route('logout') }}" method="POST" class="logout-form">
