@@ -30,7 +30,6 @@
         .sidebar nav a i, .sidebar nav button i { width:20px; text-align:center; }
 
         .sidebar nav a:hover, .sidebar nav a.active, .sidebar nav button:hover { background:#134a73; }
-
         /* Logout Button specific */
         .logout-form { margin-top: auto; }
         .sidebar nav button.logout { background:#133b55; color: #ff5d4f; }
@@ -81,7 +80,7 @@
             <a href="{{ route('admin.dashboard') }}" class="active"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
 
             <a href="{{ route('admin.users') }}"><i class="fa-solid fa-users"></i> Users</a>
-
+            <a href="{{ route('admin.boats') }}"><i class="fa-solid fa-ship"></i> Boats</a>
             <a href="#"><i class="fa-solid fa-triangle-exclamation"></i> SOS Monitor</a>
             <a href="#"><i class="fa-solid fa-map"></i> Map</a>
 

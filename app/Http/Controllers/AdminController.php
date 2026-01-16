@@ -66,4 +66,26 @@ class AdminController extends Controller
         }
         return back()->with('error', 'User not found.');
     }
+    // --- BOATS MANAGEMENT ---
+
+    // 6. Show All Boats with Owner Name
+    public function allBoats()
+    {
+        // SQL Query: SELECT * FROM boats JOIN users ON boats.user_id = users.id;
+        // 'with(user)'
+        $boats = \App\Models\Boat::with('user')->get();
+
+        return view('admin_boats', compact('boats'));
+    }
+
+    // 7. Delete a Boat (Admin Power)
+    public function deleteBoat($id)
+    {
+        $boat = \App\Models\Boat::find($id);
+        if($boat){
+            $boat->delete();
+            return back()->with('success', 'Boat removed permanently.');
+        }
+        return back()->with('error', 'Boat not found.');
+    }
 }

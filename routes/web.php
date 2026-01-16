@@ -36,7 +36,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/users', [AdminController::class, 'allUsers'])->name('admin.users');
     Route::get('/approve/{id}', [AdminController::class, 'approve'])->name('admin.approve');
     Route::get('/reject/{id}', [AdminController::class, 'reject'])->name('admin.reject');
-
+// Boats Management
+    Route::get('/admin/boats', [AdminController::class, 'allBoats'])->name('admin.boats');
+    Route::delete('/admin/boats/delete/{id}', [AdminController::class, 'deleteBoat'])->name('admin.deleteBoat');
 
 // Delete/Ban User Route
     Route::delete('/admin/users/delete/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
