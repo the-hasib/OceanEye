@@ -39,7 +39,7 @@ class CustomLoginController extends Controller
         // Attempt Login
         if (Auth::attempt($credentials)) {
 
-            // Check Status
+            // Check Status SELECT Query
             $user = Auth::user();
 
             if ($user->status == 'pending') {
