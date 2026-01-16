@@ -88,4 +88,11 @@ class AdminController extends Controller
         }
         return back()->with('error', 'Boat not found.');
     }
+    // 8. Show Live Map
+    public function map()
+    {
+        // Get active SOS alerts to show on map
+        $alerts = \App\Models\SosAlert::where('status', 'active')->with('user')->get();
+        return view('admin_map', compact('alerts'));
+    }
 }

@@ -40,7 +40,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/admin/users/delete/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
     Route::get('/approve/{id}', [AdminController::class, 'approve'])->name('admin.approve');
     Route::get('/reject/{id}', [AdminController::class, 'reject'])->name('admin.reject');
-
+// Map Route
+    Route::get('/admin/map', [AdminController::class, 'map'])->name('admin.map');
     // Boats Management
     Route::get('/admin/boats', [AdminController::class, 'allBoats'])->name('admin.boats');
     Route::delete('/admin/boats/delete/{id}', [AdminController::class, 'deleteBoat'])->name('admin.deleteBoat');
