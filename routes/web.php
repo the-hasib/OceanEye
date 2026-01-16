@@ -37,6 +37,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/approve/{id}', [AdminController::class, 'approve'])->name('admin.approve');
     Route::get('/reject/{id}', [AdminController::class, 'reject'])->name('admin.reject');
 
+
+// Delete/Ban User Route
+    Route::delete('/admin/users/delete/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
     // --- Boat Routes (New) ---
     Route::post('/boats/store', [BoatController::class, 'store'])->name('boats.store');
     Route::delete('/boats/delete/{id}', [BoatController::class, 'destroy'])->name('boats.delete');

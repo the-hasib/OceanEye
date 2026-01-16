@@ -78,8 +78,10 @@
     <aside class="sidebar">
         <div class="brand">🌊 OceanEye</div>
         <nav>
-            <a href="#" class="active"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
-            <a href="#"><i class="fa-solid fa-users"></i> Users</a>
+            <a href="{{ route('admin.dashboard') }}" class="active"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+
+            <a href="{{ route('admin.users') }}"><i class="fa-solid fa-users"></i> Users</a>
+
             <a href="#"><i class="fa-solid fa-triangle-exclamation"></i> SOS Monitor</a>
             <a href="#"><i class="fa-solid fa-map"></i> Map</a>
 
@@ -104,10 +106,11 @@
         <section class="summary">
             <div class="card">
                 <h4>Total Users</h4>
-                <p>{{ \App\Models\User::count() }}</p> </div>
+                <p>{{ \App\Models\User::count() }}</p>
+            </div>
             <div class="card pending">
                 <h4>Pending Approvals</h4>
-                <p>0</p>
+                <p>{{ \App\Models\User::where('status', 'pending')->count() }}</p>
             </div>
             <div class="card alert">
                 <h4>Active SOS</h4>
@@ -115,11 +118,19 @@
             </div>
             <div class="card">
                 <h4>Coast Guard Units</h4>
-                <p>{{ \App\Models\User::where('role', 'coast_guard')->count() }}</p> </div>
+                <p>{{ \App\Models\User::where('role', 'coast_guard')->count() }}</p>
+            </div>
         </section>
 
         <section class="panel">
             <h2>⏳ Pending User Approvals</h2>
+
+            @if(session('success'))
+                <div style="background: #2ecc71; color: white; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                    {{ session('success') }}
+                </div>
+            @endif
+
             <table>
                 <thead>
                 <tr>
@@ -178,6 +189,7 @@
             </table>
             <p class="note">Users remain inactive until approved.</p>
         </section>
+
     </main>
 
 </div>
@@ -189,22 +201,6 @@
     }
     updateTime();
     setInterval(updateTime,1000);
-
-    // APPROVAL DEMO Logic
-    function approve(btn){
-        if(confirm("Are you sure you want to approve this user?")) {
-            btn.closest("tr").remove();
-            // In future, this will call backend to update status
-            alert("User Approved (Demo)");
-        }
-    }
-
-    function reject(btn){
-        if(confirm("Are you sure you want to reject this user?")) {
-            btn.closest("tr").remove();
-            alert("User Rejected (Demo)");
-        }
-    }
 </script>
 
 </body>
