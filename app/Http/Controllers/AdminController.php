@@ -8,13 +8,21 @@ use Illuminate\Http\Request;
 class AdminController extends Controller
 {
     // 1. Load dashboard with pending users
+
     public function index()
     {
+        // 1. Fetch Real Counts from Database
+        $total_users = User::count();
+        $pending_count = User::where('status', 'pending')->count();
+        $active_sos = \App\Models\SosAlert::where('status', 'active')->count(); // Active SOS Count
+        $coast_guard_count = User::where('role', 'coast_guard')->count();
+
         // SQL Query: SELECT * FROM users WHERE status = 'pending';
         // Fetch only users where status is 'pending'
         $pending_users = User::where('status', 'pending')->get();
 
-        return view('admin', compact('pending_users'));
+        // 3. Pass all variables to the view
+        return view('admin', compact('total_users', 'pending_count', 'active_sos', 'coast_guard_count', 'pending_users'));
     }
 
     // 2. Approve a user
