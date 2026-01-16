@@ -23,7 +23,7 @@
         .logout-form { margin-top: auto; }
         .sidebar nav button.logout { background:#133b55; color: #ff5d4f; }
 
-        .main { flex:1; padding:0; display: flex; flex-direction: column; position: relative; } /* Padding 0 for full map */
+        .main { flex:1; padding:0; display: flex; flex-direction: column; position: relative; }
 
         /* Map Container */
         #map { height: 100%; width: 100%; z-index: 1; }
@@ -44,8 +44,10 @@
         .map-overlay h3 { color: #fff; margin-bottom: 10px; font-size: 16px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 5px; }
         .legend-item { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; font-size: 14px; }
         .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
-        .dot-red { background: #ff4757; box-shadow: 0 0 5px #ff4757; }
-        .dot-blue { background: #3bbcff; }
+        .dot-red { background: #ff4757; box-shadow: 0 0 8px #ff4757; animation: blink 1s infinite; }
+        .dot-blue { background: #3bbcff; border: 1px solid white; }
+
+        @keyframes blink { 50% { opacity: 0.5; } }
 
     </style>
 </head>
@@ -60,7 +62,6 @@
             <a href="{{ route('admin.users') }}"><i class="fa-solid fa-users"></i> Users</a>
             <a href="{{ route('admin.boats') }}"><i class="fa-solid fa-ship"></i> Boats</a>
             <a href="{{ route('admin.sos') }}"><i class="fa-solid fa-triangle-exclamation"></i> SOS Monitor</a>
-
             <a href="{{ route('admin.map') }}" class="active"><i class="fa-solid fa-map"></i> Map</a>
 
             <form action="{{ route('logout') }}" method="POST" class="logout-form">
@@ -74,14 +75,13 @@
         <div class="map-overlay">
             <h3><i class="fa-solid fa-radar"></i> Live Tracking</h3>
             <div class="legend-item">
-                <span class="dot dot-red"></span> SOS Signal (Distress)
+                <span class="dot dot-red"></span>
+                <span style="color: #ff4757; font-weight: bold;">SOS Alert ({{ count($alerts) }})</span>
             </div>
             <div class="legend-item">
-                <span class="dot dot-blue"></span> Active Boats (Safe)
+                <span class="dot dot-blue"></span>
+                <span>Active Boats ({{ count($boats) }})</span>
             </div>
-            <p style="margin-top:10px; font-size:12px; opacity:0.7;">
-                Map updates automatically based on incoming signals.
-            </p>
         </div>
 
         <div id="map"></div>
@@ -92,15 +92,14 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-    // 1. Initialize Map (Center: Bay of Bengal)
-    var map = L.map('map').setView([21.5, 90.0], 8);
+    // 1. Initialize Map
+    var map = L.map('map').setView([21.8, 90.0], 9); // Center on Bay of Bengal
 
-    // 2. Add Map Tiles (OpenStreetMap - Dark Modeish look available but standard is fine)
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
+        attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    // 3. Custom Icons
+    // --- ICONS ---
     var sosIcon = L.icon({
         iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
         iconSize: [25, 41],
@@ -108,34 +107,52 @@
         popupAnchor: [1, -34]
     });
 
-    // 4. Add SOS Markers from Database
+    var boatIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34]
+    });
+
+    // --- 2. SHOW SOS ALERTS (Red Markers) ---
     var alerts = @json($alerts);
 
     alerts.forEach(function(alert) {
-        // Parse Location String "21.9N, 89.9E" -> [21.9, 89.9]
-        // This is a simple parser assuming the format is consistent
-        var lat = 21.9; // Default fallback
-        var lng = 89.9;
-
-        // Try to parse if format is like "21.9, 89.9" or similar
+        // Parsing "21.9N, 89.9E" to coordinates
+        var lat = 21.9; var lng = 89.9;
         try {
             var parts = alert.location.split(',');
             lat = parseFloat(parts[0].replace(/[^\d.]/g, ''));
             lng = parseFloat(parts[1].replace(/[^\d.]/g, ''));
-        } catch(e) {
-            console.log("Error parsing location");
-        }
+        } catch(e) {}
 
-        // Add Marker
         L.marker([lat, lng], {icon: sosIcon})
             .addTo(map)
             .bindPopup(`
-                <b>SOS ALERT!</b><br>
-                User: ${alert.user.name}<br>
-                Mobile: ${alert.user.mobile}<br>
-                Time: ${new Date(alert.created_at).toLocaleTimeString()}
+                <strong style="color:red">SOS ALERT!</strong><br>
+                User: ${alert.user ? alert.user.name : 'Unknown'}<br>
+                Mobile: ${alert.user ? alert.user.mobile : 'N/A'}
             `)
             .openPopup();
+    });
+
+    // --- 3. SHOW ALL BOATS (Blue Markers) ---
+    var boats = @json($boats);
+
+    boats.forEach(function(boat) {
+        // GENERATING FAKE GPS FOR DEMO
+        // Randomly scatter boats around Bay of Bengal (Lat: 21.5 - 22.0, Lng: 89.5 - 90.5)
+        var lat = 21.5 + (Math.random() * 0.5);
+        var lng = 89.5 + (Math.random() * 1.0);
+
+        L.marker([lat, lng], {icon: boatIcon})
+            .addTo(map)
+            .bindPopup(`
+                <b>⛵ ${boat.boat_name}</b><br>
+                Reg: ${boat.registration_number}<br>
+                Owner: ${boat.user ? boat.user.name : 'Unknown'}<br>
+                Type: ${boat.boat_type}
+            `);
     });
 
 </script>
