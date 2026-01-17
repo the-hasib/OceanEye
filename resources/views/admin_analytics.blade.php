@@ -183,7 +183,7 @@
         }
     });
 
-    // 3. SOS Chart
+    // 3. SOS Chart ON PAGE
     const sosCtx = document.getElementById('sosChart');
     new Chart(sosCtx, {
         type: 'bar',
