@@ -40,4 +40,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    /**
+     * Relationship: A User (Fisherman) can have multiple Boats.
+     */
+    public function boats()
+    {
+        return $this->hasMany(Boat::class);
+    }
+
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -107,5 +108,42 @@ class AdminController extends Controller
         $boats = \App\Models\Boat::with('user')->get();
 
         return view('admin_map', compact('alerts', 'boats'));
+    }
+    // --- ANALYTICS & REPORTS (COMPLEX QUERIES) ---
+    public function analytics()
+    {
+        // 1. Boat Stats (Group By)
+        $boat_stats = DB::table('boats')
+            ->select('boat_type', DB::raw('count(*) as total'))
+            ->groupBy('boat_type')
+            ->get();
+
+        // 2. Top Fishermen (Relationship Count)
+        $top_fishermen = \App\Models\User::where('role', 'fisherman')
+            ->withCount('boats')
+            ->orderBy('boats_count', 'desc')
+            ->take(5)
+            ->get();
+
+        // 3. Monthly SOS Report (Date Function)
+        $monthly_sos = DB::table('sos_alerts')
+            ->select(DB::raw('MONTHNAME(created_at) as month'), DB::raw('count(*) as total'))
+            ->groupBy('month')
+            ->get();
+
+        // 4. Inactive Users (Subquery / DoesntHave)
+        $inactive_users = \App\Models\User::where('role', 'fisherman')
+            ->doesntHave('boats')
+            ->get();
+
+        // 5. Top Rescue Units (JOIN Query)
+        $top_rescuers = DB::table('users')
+            ->join('sos_alerts', 'users.id', '=', 'sos_alerts.resolved_by')
+            ->select('users.name', DB::raw('count(sos_alerts.id) as total_rescues'))
+            ->groupBy('users.name')
+            ->orderBy('total_rescues', 'desc')
+            ->get();
+
+        return view('admin_analytics', compact('boat_stats', 'top_fishermen', 'monthly_sos', 'inactive_users', 'top_rescuers'));
     }
 }

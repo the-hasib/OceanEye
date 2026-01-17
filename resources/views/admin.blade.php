@@ -85,18 +85,18 @@
             <a href="{{ route('admin.sos') }}"><i class="fa-solid fa-triangle-exclamation"></i> SOS Monitor</a>
             <a href="{{ route('admin.map') }}"><i class="fa-solid fa-map"></i> Map</a>
 
+            <a href="{{ route('admin.analytics') }}"><i class="fa-solid fa-chart-simple"></i> Analytics</a>
+
             <form action="{{ route('logout') }}" method="POST" class="logout-form">
                 @csrf
-                <button type="submit" class="logout">
-                    <i class="fa-solid fa-right-from-bracket"></i> Logout
-                </button>
+                <button type="submit" class="logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
             </form>
         </nav>
     </aside>
 
     <main class="main">
         <header class="topbar">
-            <h1>Welcome, {{ Auth::user()->name }}</h1>
+            <h1>Welcome Admin, {{ Auth::user()->name }}</h1>
             <div class="time-box">
                 <i class="fa-regular fa-clock"></i>
                 <span id="liveTime"></span>

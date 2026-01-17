@@ -9,11 +9,18 @@ class SosAlert extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'location', 'status'];
+    // Added 'resolved_by' to allow saving the rescuer's ID
+    protected $fillable = ['user_id', 'location', 'status', 'resolved_by'];
 
-    // Relationship: An SOS belongs to a Fisherman (User)
+    // Relationship: The fisherman who sent the SOS
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    // Relationship: The Coast Guard who resolved/rescued the alert
+    public function rescuer()
+    {
+        return $this->belongsTo(User::class, 'resolved_by');
     }
 }

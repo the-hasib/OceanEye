@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('location')->nullable();
             $table->enum('status', ['active', 'resolved'])->default('active');
+           //add this file for find Top Rescue Unit
+            $table->foreignId('resolved_by')->nullable()->constrained('users');
             $table->timestamps();
         });
     }
