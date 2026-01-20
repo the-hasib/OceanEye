@@ -63,14 +63,36 @@
     <aside class="sidebar">
         <div class="brand">🌊 OceanEye</div>
         <nav>
-            <nav>
-                <a href="{{ route('admin.dashboard') }}" class="active"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
-                <a href="{{ route('admin.users') }}"><i class="fa-solid fa-users"></i> Users</a>
-                <a href="{{ route('admin.boats') }}"><i class="fa-solid fa-ship"></i> Boats</a>
-                <a href="{{ route('admin.sos') }}"><i class="fa-solid fa-triangle-exclamation"></i> SOS Monitor</a>
-                <a href="{{ route('admin.map') }}"><i class="fa-solid fa-map"></i> Map</a>
+            <a href="{{ route('admin.dashboard') }}"
+               class="{{ Route::is('admin.dashboard') ? 'active' : '' }}">
+                <i class="fa-solid fa-chart-pie"></i> Dashboard
+            </a>
 
-                <a href="{{ route('admin.analytics') }}"><i class="fa-solid fa-chart-simple"></i> Analytics</a>
+            <a href="{{ route('admin.users') }}"
+               class="{{ Route::is('admin.users') || Route::is('admin.approve') || Route::is('admin.reject') ? 'active' : '' }}">
+                <i class="fa-solid fa-users"></i> Users
+            </a>
+
+            <a href="{{ route('admin.boats') }}"
+               class="{{ Route::is('admin.boats') ? 'active' : '' }}">
+                <i class="fa-solid fa-ship"></i> Boats
+            </a>
+
+            <a href="{{ route('admin.sos') }}"
+               class="{{ Route::is('admin.sos') ? 'active' : '' }}">
+                <i class="fa-solid fa-triangle-exclamation"></i> SOS Monitor
+            </a>
+
+            <a href="{{ route('admin.map') }}"
+               class="{{ Route::is('admin.map') ? 'active' : '' }}">
+                <i class="fa-solid fa-map"></i> Map
+            </a>
+
+            <a href="{{ route('admin.analytics') }}"
+               class="{{ Route::is('admin.analytics') ? 'active' : '' }}">
+                <i class="fa-solid fa-chart-simple"></i> Analytics
+            </a>
+
             <form action="{{ route('logout') }}" method="POST" class="logout-form">
                 @csrf
                 <button type="submit" class="logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>

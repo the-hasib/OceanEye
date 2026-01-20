@@ -30,7 +30,9 @@
         }
         .sidebar nav a i, .sidebar nav button i { width:20px; text-align:center; }
 
-        .sidebar nav a:hover, .sidebar nav a.active, .sidebar nav button:hover { background:#134a73; }
+        /* Active Class Logic */
+        .sidebar nav a:hover, .sidebar nav a.active, .sidebar nav button:hover { background:#134a73; color: white; font-weight: bold; }
+
         .logout-form { margin-top: auto; }
         .sidebar nav button.logout { background:#133b55; color: #ff5d4f; }
         .sidebar nav button.logout:hover { background:#e74c3c; color: white; }
@@ -42,25 +44,19 @@
         .topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; }
         .time-box { display:flex; gap:8px; align-items:center; opacity:.85; }
 
-        /* --- ANALYTICS SPECIFIC STYLES (Matching Theme) --- */
-
-        /* Grid Layout for Charts */
+        /* --- ANALYTICS SPECIFIC STYLES --- */
         .analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
-
-        /* Reusing your Panel Style for Cards */
         .panel-card { background:#0f2f4a; padding:20px; border-radius:18px; height: 100%; }
         .panel-card h3 { margin-bottom:15px; font-size: 16px; color: #cfe9ff; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
 
-        /* List Items (Leaderboard) */
+        /* List Items */
         .list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,.08); }
         .list-item:last-child { border-bottom: none; }
-
         .badge { background: #134a73; color: #3bbcff; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
         .rank-icon { margin-right: 8px; font-size: 16px; }
 
         /* Footer */
         .footer { text-align: center; padding: 20px; color: rgba(255, 255, 255, 0.4); font-size: 13px; margin-top: auto; }
-
     </style>
 </head>
 <body>
@@ -70,14 +66,26 @@
     <aside class="sidebar">
         <div class="brand">🌊 OceanEye</div>
         <nav>
-            <nav>
-                <a href="{{ route('admin.dashboard') }}" class="active"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
-                <a href="{{ route('admin.users') }}"><i class="fa-solid fa-users"></i> Users</a>
-                <a href="{{ route('admin.boats') }}"><i class="fa-solid fa-ship"></i> Boats</a>
-                <a href="{{ route('admin.sos') }}"><i class="fa-solid fa-triangle-exclamation"></i> SOS Monitor</a>
-                <a href="{{ route('admin.map') }}"><i class="fa-solid fa-map"></i> Map</a>
+            <a href="{{ route('admin.dashboard') }}" class="{{ Route::is('admin.dashboard') ? 'active' : '' }}">
+                <i class="fa-solid fa-chart-pie"></i> Dashboard
+            </a>
+            <a href="{{ route('admin.users') }}" class="{{ Route::is('admin.users') ? 'active' : '' }}">
+                <i class="fa-solid fa-users"></i> Users
+            </a>
+            <a href="{{ route('admin.boats') }}" class="{{ Route::is('admin.boats') ? 'active' : '' }}">
+                <i class="fa-solid fa-ship"></i> Boats
+            </a>
+            <a href="{{ route('admin.sos') }}" class="{{ Route::is('admin.sos') ? 'active' : '' }}">
+                <i class="fa-solid fa-triangle-exclamation"></i> SOS Monitor
+            </a>
+            <a href="{{ route('admin.map') }}" class="{{ Route::is('admin.map') ? 'active' : '' }}">
+                <i class="fa-solid fa-map"></i> Map
+            </a>
 
-                <a href="{{ route('admin.analytics') }}"><i class="fa-solid fa-chart-simple"></i> Analytics</a>
+            <a href="{{ route('admin.analytics') }}" class="{{ Route::is('admin.analytics') ? 'active' : '' }}">
+                <i class="fa-solid fa-chart-simple"></i> Analytics
+            </a>
+
             <form action="{{ route('logout') }}" method="POST" class="logout-form">
                 @csrf
                 <button type="submit" class="logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
@@ -155,14 +163,13 @@
 </div>
 
 <script>
-    // 1. Clock Logic
     function updateTime(){
         document.getElementById("liveTime").innerText = new Date().toLocaleString("en-GB");
     }
     updateTime();
     setInterval(updateTime,1000);
 
-    // 2. Boat Chart
+    // Chart Data Handling
     const boatCtx = document.getElementById('boatChart');
     new Chart(boatCtx, {
         type: 'doughnut',
@@ -170,7 +177,7 @@
             labels: {!! json_encode($boat_stats->pluck('boat_type')) !!},
             datasets: [{
                 data: {!! json_encode($boat_stats->pluck('total')) !!},
-                backgroundColor: ['#3bbcff', '#2ecc71', '#ffd24c', '#ff5d4f'], // Dashboard colors
+                backgroundColor: ['#3bbcff', '#2ecc71', '#ffd24c', '#ff5d4f'],
                 borderWidth: 0
             }]
         },
@@ -183,7 +190,6 @@
         }
     });
 
-    // 3. SOS Chart ON PAGE
     const sosCtx = document.getElementById('sosChart');
     new Chart(sosCtx, {
         type: 'bar',
@@ -201,15 +207,8 @@
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: { color: 'rgba(255,255,255,0.1)' },
-                    ticks: { color: '#eaf6ff' }
-                },
-                x: {
-                    grid: { display: false },
-                    ticks: { color: '#eaf6ff' }
-                }
+                y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#eaf6ff' } },
+                x: { grid: { display: false }, ticks: { color: '#eaf6ff' } }
             },
             plugins: { legend: { display: false } }
         }

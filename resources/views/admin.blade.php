@@ -29,7 +29,9 @@
         }
         .sidebar nav a i, .sidebar nav button i { width:20px; text-align:center; }
 
-        .sidebar nav a:hover, .sidebar nav a.active, .sidebar nav button:hover { background:#134a73; }
+        /* Active Class Logic */
+        .sidebar nav a:hover, .sidebar nav a.active, .sidebar nav button:hover { background:#134a73; color: white; font-weight: bold; }
+
         .logout-form { margin-top: auto; }
         .sidebar nav button.logout { background:#133b55; color: #ff5d4f; }
         .sidebar nav button.logout:hover { background:#e74c3c; color: white; }
@@ -79,13 +81,35 @@
     <aside class="sidebar">
         <div class="brand">🌊 OceanEye</div>
         <nav>
-            <a href="{{ route('admin.dashboard') }}" class="active"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
-            <a href="{{ route('admin.users') }}"><i class="fa-solid fa-users"></i> Users</a>
-            <a href="{{ route('admin.boats') }}"><i class="fa-solid fa-ship"></i> Boats</a>
-            <a href="{{ route('admin.sos') }}"><i class="fa-solid fa-triangle-exclamation"></i> SOS Monitor</a>
-            <a href="{{ route('admin.map') }}"><i class="fa-solid fa-map"></i> Map</a>
+            <a href="{{ route('admin.dashboard') }}"
+               class="{{ Route::is('admin.dashboard') ? 'active' : '' }}">
+                <i class="fa-solid fa-chart-pie"></i> Dashboard
+            </a>
 
-            <a href="{{ route('admin.analytics') }}"><i class="fa-solid fa-chart-simple"></i> Analytics</a>
+            <a href="{{ route('admin.users') }}"
+               class="{{ Route::is('admin.users') || Route::is('admin.approve') || Route::is('admin.reject') ? 'active' : '' }}">
+                <i class="fa-solid fa-users"></i> Users
+            </a>
+
+            <a href="{{ route('admin.boats') }}"
+               class="{{ Route::is('admin.boats') ? 'active' : '' }}">
+                <i class="fa-solid fa-ship"></i> Boats
+            </a>
+
+            <a href="{{ route('admin.sos') }}"
+               class="{{ Route::is('admin.sos') ? 'active' : '' }}">
+                <i class="fa-solid fa-triangle-exclamation"></i> SOS Monitor
+            </a>
+
+            <a href="{{ route('admin.map') }}"
+               class="{{ Route::is('admin.map') ? 'active' : '' }}">
+                <i class="fa-solid fa-map"></i> Map
+            </a>
+
+            <a href="{{ route('admin.analytics') }}"
+               class="{{ Route::is('admin.analytics') ? 'active' : '' }}">
+                <i class="fa-solid fa-chart-simple"></i> Analytics
+            </a>
 
             <form action="{{ route('logout') }}" method="POST" class="logout-form">
                 @csrf
