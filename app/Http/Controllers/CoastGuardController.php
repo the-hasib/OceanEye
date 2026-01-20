@@ -41,6 +41,6 @@ class CoastGuardController extends Controller
             'resolved_by' => Auth::id()
         ]);
 
-        return back()->with('success', 'Mission Accomplished!');
+        return back()->with('success', 'Mission Completed!');
     }
 }

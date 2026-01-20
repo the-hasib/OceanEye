@@ -19,7 +19,7 @@ class SosController extends Controller
         if(!$existing) {
             SosAlert::create([
                 'user_id' => Auth::id(),
-                'location' => '21.9N, 89.9E', // Fake GPS for now (Later we will get real GPS)
+                'location' => '21.9N, 89.9E', // Fake GPS for now
                 'status' => 'active'
             ]);
             return back()->with('success', 'SOS Signal Sent! Help is on the way!');

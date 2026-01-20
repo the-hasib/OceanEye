@@ -21,8 +21,7 @@ class Boat extends Model
 
     // 2. Define Relationship: Boat belongs to a User (Fisherman)
     // SQL Query Context: SELECT * FROM users WHERE id = boats.user_id
-    public function user()
-    {
-        return $this->belongsTo(User::class);
+    public function boats() {
+        return $this->hasMany(Boat::class);
     }
 }
