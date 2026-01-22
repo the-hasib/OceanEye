@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\SosAlert;
 use Illuminate\Http\Request;
@@ -35,5 +36,23 @@ class SosController extends Controller
         $alerts = SosAlert::where('status', 'active')->with('user')->get();
 
         return view('admin_sos', compact('alerts'));
+    }
+    public function store(Request $request)
+    {
+        $request->validate([
+            'boat_id' => 'required', // after found boat id then send sos
+            'latitude' => 'nullable',
+            'longitude' => 'nullable',
+        ]);
+
+        SosAlert::create([
+            'user_id' => Auth::id(),
+            'boat_id' => $request->boat_id, // save boat id
+            'status' => 'active',
+            'latitude' => $request->latitude ?? 0.0000,
+            'longitude' => $request->longitude ?? 0.0000,
+        ]);
+
+        return back()->with('success', 'SOS Sent! Coast Guard has been notified for your boat.');
     }
 }
