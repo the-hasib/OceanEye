@@ -3,41 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - All Boats</title>
+    <title>Admin - Boat Registry</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
-        /* Dark Theme Styles */
-        * { margin:0; padding:0; box-sizing:border-box; font-family: "Segoe UI", sans-serif; }
-        body { background: radial-gradient(circle at top, #0b2740, #061726); color:#eaf6ff; display: flex; flex-direction: column; min-height: 100vh; }
+        /* --- 1. THEME VARIABLES (Consistent Across App) --- */
+        :root {
+            --glass-bg: rgba(6, 18, 38, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --neon-cyan: #00f3ff;
+            --neon-red: #ff003c;
+            --neon-green: #00ff80;
+            --neon-yellow: #f1c40f;
+            --text-main: #ffffff;
+            --text-muted: #cbd5e1;
+        }
 
-        /* Layout & Sidebar */
-        .admin-layout { display:flex; flex: 1; }
-        .sidebar { width:240px; background:#0c3558; padding:20px; flex-shrink:0; display: flex; flex-direction: column; }
-        .brand { font-size:22px; font-weight:700; margin-bottom:30px; color: white; }
-        .sidebar nav { display: flex; flex-direction: column; flex-grow: 1; }
-        .sidebar nav a, .sidebar nav button { display:flex; align-items:center; gap:12px; padding:12px 14px; margin-bottom:8px; color:#cfe9ff; text-decoration:none; border-radius:10px; transition:.3s; background: none; border: none; width: 100%; font-size: 16px; cursor: pointer; text-align: left; }
-        .sidebar nav a:hover, .sidebar nav a.active, .sidebar nav button:hover { background:#134a73; color: white; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Rajdhani', sans-serif; }
+
+        body {
+            background: url("{{ asset('login.jpg') }}") no-repeat center center/cover fixed;
+            min-height: 100vh;
+            color: var(--text-main);
+            display: flex; flex-direction: column;
+        }
+
+        /* Dark Overlay */
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+
+        /* --- 2. LAYOUT --- */
+        .admin-layout { display:flex; flex: 1; height: 100vh; overflow: hidden; }
+
+        /* --- 3. SIDEBAR (Glass Style) --- */
+        .sidebar {
+            width: 260px;
+            background: rgba(5, 15, 30, 0.95); /* Solid transparent look */
+            border-right: 1px solid var(--glass-border);
+            padding: 25px;
+            display: flex; flex-direction: column;
+            flex-shrink: 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .brand {
+            font-size: 28px; font-weight: 700; margin-bottom: 40px;
+            color: white; text-transform: uppercase; letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--neon-cyan);
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .sidebar nav { display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
+
+        .sidebar nav a, .sidebar nav button {
+            display:flex; align-items:center; gap:15px; padding:12px 15px;
+            color: var(--text-muted); text-decoration:none;
+            border-radius: 8px; transition: 0.3s; background: transparent; border: 1px solid transparent;
+            width: 100%; font-size: 16px; cursor: pointer; text-align: left;
+            font-weight: 600; letter-spacing: 0.5px;
+        }
+
+        /* Hover & Active States */
+        .sidebar nav a:hover, .sidebar nav a.active {
+            background: rgba(0, 243, 255, 0.1);
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
+        }
+
+        /* Logout Button */
         .logout-form { margin-top: auto; }
-        .sidebar nav button.logout { background:#133b55; color: #ff5d4f; }
+        .sidebar nav button.logout {
+            color: var(--neon-red);
+            border: 1px solid rgba(255, 0, 60, 0.3);
+        }
+        .sidebar nav button.logout:hover {
+            background: var(--neon-red); color: white;
+            box-shadow: 0 0 15px var(--neon-red); border-color: var(--neon-red);
+        }
 
-        /* Main Content */
-        .main { flex:1; padding:28px; display: flex; flex-direction: column; }
-        .topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; }
-        .panel { background:#0f2f4a; padding:20px; border-radius:18px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .panel h2 { margin-bottom:14px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        /* --- 4. MAIN CONTENT --- */
+        .main {
+            flex:1; padding: 30px;
+            display: flex; flex-direction: column;
+            overflow-y: auto; /* Scrollable content */
+        }
 
-        /* Table */
+        /* TOP BAR */
+        .topbar {
+            display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;
+            background: var(--glass-bg); padding: 15px 25px; border-radius: 12px;
+            border: 1px solid var(--glass-border);
+        }
+        .topbar h1 { font-size: 20px; font-weight: 600; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1px; }
+        .time-box { display:flex; gap:10px; align-items:center; font-family: monospace; color: var(--text-muted); }
+
+        /* --- 5. PANEL & TABLE (Glass Effect) --- */
+        .panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 25px; border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        .panel h2 {
+            margin-bottom:20px; color: white; font-size: 20px;
+            text-transform: uppercase; letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;
+        }
+
+        /* TABLE STYLE */
         table { width:100%; border-collapse:collapse; margin-top: 10px; }
-        thead { background:#124366; }
-        th,td { padding:12px; text-align:left; vertical-align: middle; }
-        tbody tr { border-bottom:1px solid rgba(255,255,255,.08); }
-        tbody tr:hover { background: rgba(255,255,255,0.02); }
+        thead { background: rgba(255,255,255,0.05); }
+        th {
+            padding: 15px; text-align: left;
+            color: var(--neon-cyan); font-size: 13px;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        td {
+            padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 15px; color: var(--text-main); vertical-align: middle;
+        }
+        tbody tr:hover { background: rgba(255,255,255,0.05); }
 
-        .owner-badge { background: rgba(255, 210, 76, 0.15); color: #ffd24c; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
-        .btn-ban { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+        /* OWNER BADGE */
+        .owner-badge {
+            background: rgba(241, 196, 15, 0.15);
+            color: var(--neon-yellow);
+            padding: 5px 10px; border-radius: 6px;
+            font-size: 12px; font-weight: 700; border: 1px solid var(--neon-yellow);
+            display: inline-flex; align-items: center; gap: 6px;
+        }
 
-        .footer { text-align: center; padding: 20px; color: rgba(255, 255, 255, 0.4); font-size: 13px; margin-top: auto; }
+        /* REMOVE BUTTON */
+        .btn-ban {
+            background: rgba(255, 0, 60, 0.15);
+            border: 1px solid var(--neon-red);
+            color: var(--neon-red);
+            padding: 6px 12px; border-radius: 6px;
+            cursor: pointer; font-size: 12px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
+        }
+        .btn-ban:hover {
+            background: var(--neon-red); color: white;
+            box-shadow: 0 0 10px var(--neon-red);
+        }
+
+        /* Footer */
+        .footer { text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px; margin-top: auto; opacity: 0.6; }
     </style>
 </head>
 <body>
@@ -45,7 +162,7 @@
 <div class="admin-layout">
 
     <aside class="sidebar">
-        <div class="brand">🌊 OceanEye</div>
+        <div class="brand"><i class="fas fa-water"></i> OceanEye</div>
         <nav>
             <a href="{{ route('admin.dashboard') }}"
                class="{{ Route::is('admin.dashboard') ? 'active' : '' }}">
@@ -87,12 +204,15 @@
     <main class="main">
         <header class="topbar">
             <h1>Boat Registry</h1>
-            <div style="color: #cfe9ff;"><i class="fa-regular fa-clock"></i> {{ date('d M Y') }}</div>
+            <div class="time-box">
+                <i class="fa-regular fa-clock"></i>
+                <span id="liveTime"></span>
+            </div>
         </header>
 
         @if(session('success'))
-            <div style="background: rgba(46, 204, 113, 0.2); border: 1px solid #2ecc71; color: #2ecc71; padding: 10px; border-radius: 8px; margin-bottom: 20px;">
-                <i class="fa-solid fa-check-circle"></i> {{ session('success') }}
+            <div style="background: rgba(0, 255, 128, 0.2); color: var(--neon-green); border: 1px solid var(--neon-green); padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                <i class="fas fa-check-circle"></i> {{ session('success') }}
             </div>
         @endif
 
@@ -111,15 +231,15 @@
                 <tbody>
                 @forelse($boats as $boat)
                     <tr>
-                        <td style="font-weight: bold;">{{ $boat->boat_name }}</td>
-                        <td>{{ $boat->registration_number }}</td>
+                        <td style="font-weight: bold; color: white;">{{ $boat->boat_name }}</td>
+                        <td style="font-family: monospace; color: var(--text-muted);">{{ $boat->registration_number }}</td>
                         <td>
                             <span class="owner-badge">
                                 <i class="fa-solid fa-user"></i> {{ $boat->user->name ?? 'Unknown' }}
                             </span>
                         </td>
                         <td>
-                            {{ $boat->boat_type }} <br>
+                            <div style="font-weight: bold;">{{ $boat->boat_type }}</div>
                             <span style="font-size:12px; opacity:0.6;">Cap: {{ $boat->capacity }} ppl</span>
                         </td>
                         <td>
@@ -132,7 +252,10 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" style="text-align: center; padding: 30px; color: gray;">No boats registered yet.</td>
+                        <td colspan="5" style="text-align: center; padding: 40px; color: gray;">
+                            <i class="fas fa-ship" style="font-size: 30px; margin-bottom: 10px;"></i>
+                            <p>No boats registered yet.</p>
+                        </td>
                     </tr>
                 @endforelse
                 </tbody>
@@ -143,6 +266,14 @@
     </main>
 
 </div>
+
+<script>
+    function updateTime(){
+        document.getElementById("liveTime").innerText = new Date().toLocaleString("en-GB");
+    }
+    updateTime();
+    setInterval(updateTime,1000);
+</script>
 
 </body>
 </html>
