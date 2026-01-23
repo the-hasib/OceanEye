@@ -12,10 +12,13 @@ class BoatController extends Controller
     // 1. Show the list of boats for the logged-in Fisherman
     public function index()
     {
-        // 1.boar list
+        // 1. Fetch boats owned by the logged-in fisherman (for the table list)
         $boats = Boat::where('user_id', Auth::id())->get();
 
-        // . Fetch the latest weather code (default value if none)
+        // 2. Fetch ALL boats in the system (to display on the map)
+        $allBoats = Boat::all();
+
+        // 3. Fetch the latest weather report (or use default values if empty)
         $weather = WeatherUpdate::latest()->first() ?? (object)[
             'temperature' => '28°C',
             'condition' => 'Sunny',
@@ -23,7 +26,8 @@ class BoatController extends Controller
             'message' => 'Sea is normal.'
         ];
 
-        return view('fisherman', compact('boats', 'weather'));
+        // Return the view with all necessary data
+        return view('fisherman', compact('boats', 'allBoats', 'weather'));
     }
 
     // 2. Store a new boat in the database

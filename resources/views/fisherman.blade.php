@@ -9,19 +9,19 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <style>
-        /* General Reset */
+        /* --- 1. GLOBAL STYLES --- */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", sans-serif; }
 
         body {
-            /* Dark Blue Gradient Background */
+            /* Dark Blue Gradient Background to mimic the ocean depth */
             background: radial-gradient(circle at top, #0b2740, #061726);
             color: #eaf6ff;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            min-height: 100vh; /* Ensures footer stays at the bottom */
         }
 
-        /* --- NAVBAR --- */
+        /* --- 2. NAVBAR STYLING --- */
         .navbar {
             background: #0c3558;
             padding: 15px 30px;
@@ -31,13 +31,11 @@
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* Logo (Reverted to original) */
         .logo { font-size: 24px; font-weight: bold; color: white; }
 
-        /* Right Side: Date, User, Logout */
         .nav-right { display: flex; align-items: center; gap: 20px; }
 
-        /* Date & Time Style */
+        /* Live Clock Style */
         .date-time {
             font-size: 14px;
             color: #eaf6ff;
@@ -45,9 +43,9 @@
             letter-spacing: 0.5px;
         }
 
-        /* Logout Button (Coast Guard Style - Red, No Hover) */
+        /* Logout Button: Red background, no hover effect (Coast Guard style) */
         .logout-btn {
-            background: #ff4757; /* Red/Orange */
+            background: #ff4757;
             color: white;
             border: none;
             padding: 8px 20px;
@@ -55,10 +53,9 @@
             font-weight: bold;
             font-size: 14px;
             cursor: pointer;
-            /* No hover effect added */
         }
 
-        /* --- LAYOUT --- */
+        /* --- 3. LAYOUT CONTAINER --- */
         .container {
             padding: 30px;
             max-width: 1200px;
@@ -68,15 +65,15 @@
         }
         h2, h3 { color: #cfe9ff; margin-bottom: 15px; }
 
-        /* --- DASHBOARD GRID --- */
+        /* --- 4. DASHBOARD GRID SYSTEM --- */
         .grid-container {
             display: grid;
-            grid-template-columns: 1fr 1fr 2fr; /* SOS, Weather, Map */
+            grid-template-columns: 1fr 1fr 2fr; /* Columns: SOS, Weather, Map */
             gap: 20px;
             margin-bottom: 40px;
         }
 
-        /* Cards */
+        /* Card Base Style */
         .card {
             background: #0f2f4a;
             padding: 25px;
@@ -93,12 +90,12 @@
         .card:hover { transform: translateY(-5px); background: #134a73; }
         .card i { font-size: 40px; margin-bottom: 15px; }
 
-        /* SOS Card */
+        /* SOS Card Specifics */
         .card.sos { border: 1px solid #ff5d4f; cursor: pointer; }
         .card.sos i { color: #ff5d4f; }
         .card.sos:hover { background: #ff5d4f; color: white; }
 
-        /* Map Card */
+        /* Map Card Container */
         .card.map-card {
             padding: 0;
             overflow: hidden;
@@ -108,7 +105,7 @@
         }
         #map { width: 100%; height: 100%; }
 
-        /* --- BOAT SECTION --- */
+        /* --- 5. BOAT MANAGEMENT SECTION --- */
         .boat-section { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
 
         .panel {
@@ -118,7 +115,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        /* Forms */
+        /* Form Inputs */
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 8px; font-size: 14px; opacity: 0.8; }
 
@@ -145,19 +142,14 @@
             margin-top: 10px;
         }
 
-        /* Table */
+        /* Data Table */
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         thead { background: #124366; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); }
         th { color: #cfe9ff; }
         td { color: rgba(255,255,255,0.8); }
 
-        /* Alerts */
-        .alert { padding: 12px; margin-bottom: 20px; border-radius: 8px; }
-        .alert-success { background: #2ecc71; color: white; }
-        .alert-error { background: #e74c3c; color: white; }
-
-        /* --- MODAL (POPUP) --- */
+        /* --- 6. MODAL STYLES (POPUP) --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.8); z-index: 1000;
@@ -173,18 +165,18 @@
         .btn-cancel { background: #444; color: white; flex: 1; border: none; padding: 10px; border-radius: 8px; cursor: pointer; }
         .btn-confirm { background: #ff5d4f; color: white; flex: 1; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; }
 
-        /* --- FOOTER (Coast Guard Style) --- */
+        /* --- 7. FOOTER --- */
         .footer {
             text-align: center;
             padding: 20px;
-            background: #081b2e; /* Darker shade */
+            background: #081b2e;
             color: rgba(255, 255, 255, 0.7);
             font-size: 13px;
             margin-top: auto;
             border-top: 1px solid #1a3c5a;
         }
 
-        /* Mobile Responsive */
+        /* Responsive Design */
         @media (max-width: 768px) {
             .grid-container, .boat-section { grid-template-columns: 1fr; }
             .navbar { flex-direction: column; gap: 10px; align-items: flex-start; }
@@ -199,9 +191,7 @@
     <div class="logo">🌊 OceanEye <span style="font-size: 14px; opacity: 0.7; font-weight: normal;">| Fisherman Panel</span></div>
 
     <div class="nav-right">
-        <div class="date-time" id="liveClock">
-            Loading Date...
-        </div>
+        <div class="date-time" id="liveClock">Loading Date...</div>
 
         <div style="font-weight: bold;">{{ Auth::user()->name }}</div>
 
@@ -215,10 +205,10 @@
 <div class="container">
 
     @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+        <div class="alert alert-success" style="background:#2ecc71; padding:12px; border-radius:8px; margin-bottom:20px;">{{ session('success') }}</div>
     @endif
     @if(session('error'))
-        <div class="alert alert-error">{{ session('error') }}</div>
+        <div class="alert alert-error" style="background:#e74c3c; padding:12px; border-radius:8px; margin-bottom:20px;">{{ session('error') }}</div>
     @endif
 
     <h2>📊 Dashboard Overview</h2>
@@ -231,17 +221,14 @@
         </div>
 
         <div class="card weather" style="padding: 0; overflow: hidden; justify-content: space-between;">
-
             <div style="padding: 20px; width: 100%;">
                 <i class="fas fa-cloud-sun" style="color: #ffd24c; font-size: 35px; margin-bottom: 10px;"></i>
                 <h3 style="margin: 0; font-size: 28px; color: white;">{{ $weather->temperature }}</h3>
                 <p style="font-size: 13px; opacity: 0.8;">{{ $weather->condition }}</p>
             </div>
-
             <div style="width: 100%; padding: 12px;
                         background: {{ $weather->signal_number > 0 ? '#ff4757' : '#2ecc71' }};
                         color: white; font-weight: bold;">
-
                 @if($weather->signal_number > 0)
                     <i class="fas fa-flag" style="font-size: 14px;"></i> Danger Signal: {{ $weather->signal_number }}
                 @else
@@ -251,8 +238,7 @@
         </div>
 
         <div class="card map-card">
-            <div id="map"></div>
-            <div style="position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.6); padding: 5px 10px; border-radius: 5px; font-size: 12px; z-index: 999;">
+            <div id="map"></div> <div style="position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.6); padding: 5px 10px; border-radius: 5px; font-size: 12px; z-index: 999;">
                 <i class="fa-solid fa-satellite-dish" style="color: #2ecc71;"></i> Live Navigation
             </div>
         </div>
@@ -362,24 +348,26 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    // 1. Live Clock Function
+    // 1. Live Clock Logic
     function updateClock() {
         const now = new Date();
-        const dateString = now.toLocaleDateString('en-GB'); // DD/MM/YYYY
-        const timeString = now.toLocaleTimeString(); // HH:MM:SS
-        document.getElementById('liveClock').innerText = `${dateString}, ${timeString} | Sundarbans`;
+        document.getElementById('liveClock').innerText = now.toLocaleString('en-GB', {
+            day: 'numeric', month: 'short', year: 'numeric',
+            hour: '2-digit', minute: '2-digit', second: '2-digit'
+        }) + " | Sundarbans";
     }
     setInterval(updateClock, 1000);
-    updateClock(); // Run immediately
+    updateClock(); // Initial call
 
-    // 2. Modal Functions
+    // 2. Modal Toggle Functions
     function openSosModal() { document.getElementById('sosModal').style.display = 'flex'; }
     function closeSosModal() { document.getElementById('sosModal').style.display = 'none'; }
 
-    // 3. Submit SOS (No Location Prompt)
+    // 3. SOS Submission (No Geo-Prompt, handles logic on server)
     function confirmSOS() {
         var boatSelect = document.querySelector('select[name="boat_id"]');
         if(boatSelect.value === "") { alert("⚠️ Please select a boat first!"); return; }
+
         if(!confirm("🚨 ARE YOU SURE? Sending SOS for " + boatSelect.options[boatSelect.selectedIndex].text)) { return; }
 
         var btn = document.querySelector('.btn-confirm');
@@ -388,18 +376,50 @@
         document.getElementById('sosForm').submit();
     }
 
-    // 4. Map Setup
-    const map = L.map('map').setView([21.9497, 89.1833], 10);
+    // 4. Advanced Map Initialization
+    // Center map on the Bay of Bengal area
+    const map = L.map('map').setView([21.8, 89.5], 9);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OceanEye' }).addTo(map);
 
-    const myIcon = L.divIcon({
-        className: 'custom-div-icon',
-        html: "<div style='background-color:#3bbcff; width:15px; height:15px; border-radius:50%; border:2px solid white; box-shadow:0 0 10px #3bbcff;'></div>",
-        iconSize: [15, 15],
-        iconAnchor: [7, 7]
+    // Pass PHP variable (allBoats) to JavaScript
+    const allBoats = @json($allBoats);
+
+    // Custom Icon Definition for Boats
+    const boatIcon = L.divIcon({
+        className: 'custom-boat',
+        html: `<div style="
+            background: #3bbcff;
+            color: #061726;
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            border: 2px solid white;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+            font-size: 14px;">
+            <i class="fa-solid fa-ship"></i>
+        </div>`,
+        iconSize: [30, 30],
+        iconAnchor: [15, 15]
     });
-    L.marker([21.9497, 89.1833], {icon: myIcon}).addTo(map).bindPopup("Your Estimated Location").openPopup();
-    L.circle([21.9497, 89.1833], { color: '#3bbcff', fillColor: '#3bbcff', fillOpacity: 0.1, radius: 8000 }).addTo(map);
+
+    // Loop through all boats and add them to the map with random offsets
+    allBoats.forEach(boat => {
+        // Generate a random position near the Bay of Bengal to simulate activity
+        // Latitude range: 21.50 - 22.00, Longitude range: 89.00 - 90.00
+        let lat = 21.50 + (Math.random() * 0.5);
+        let lng = 89.00 + (Math.random() * 1.0);
+
+        L.marker([lat, lng], {icon: boatIcon})
+            .addTo(map)
+            .bindPopup(`
+                <div style="text-align: center;">
+                    <b style="color: #0c3558;">${boat.boat_name}</b><br>
+                    <span style="font-size: 11px; color: gray;">${boat.registration_number}</span><br>
+                    <span style="color: #2ecc71; font-size: 10px;">● Active in Sea</span>
+                </div>
+            `);
+    });
+
 </script>
 
 </body>
