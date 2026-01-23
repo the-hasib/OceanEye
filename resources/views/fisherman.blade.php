@@ -230,10 +230,24 @@
             <p style="font-size: 13px; opacity: 0.9;">CLICK FOR EMERGENCY</p>
         </div>
 
-        <div class="card weather">
-            <i class="fas fa-cloud-bolt" style="color: #ffd24c;"></i>
-            <h3>Weather</h3>
-            <p style="font-size: 13px; opacity: 0.7;">Storm Warning: None</p>
+        <div class="card weather" style="padding: 0; overflow: hidden; justify-content: space-between;">
+
+            <div style="padding: 20px; width: 100%;">
+                <i class="fas fa-cloud-sun" style="color: #ffd24c; font-size: 35px; margin-bottom: 10px;"></i>
+                <h3 style="margin: 0; font-size: 28px; color: white;">{{ $weather->temperature }}</h3>
+                <p style="font-size: 13px; opacity: 0.8;">{{ $weather->condition }}</p>
+            </div>
+
+            <div style="width: 100%; padding: 12px;
+                        background: {{ $weather->signal_number > 0 ? '#ff4757' : '#2ecc71' }};
+                        color: white; font-weight: bold;">
+
+                @if($weather->signal_number > 0)
+                    <i class="fas fa-flag" style="font-size: 14px;"></i> Danger Signal: {{ $weather->signal_number }}
+                @else
+                    <i class="fas fa-shield-alt" style="font-size: 14px;"></i> Sea is Safe
+                @endif
+            </div>
         </div>
 
         <div class="card map-card">

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\WeatherUpdate;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,10 +12,18 @@ class BoatController extends Controller
     // 1. Show the list of boats for the logged-in Fisherman
     public function index()
     {
-        // SQL Query: SELECT * FROM boats WHERE user_id = [CURRENT_USER_ID];
+        // 1.boar list
         $boats = Boat::where('user_id', Auth::id())->get();
 
-        return view('fisherman', compact('boats'));
+        // . Fetch the latest weather code (default value if none)
+        $weather = WeatherUpdate::latest()->first() ?? (object)[
+            'temperature' => '28°C',
+            'condition' => 'Sunny',
+            'signal_number' => 0,
+            'message' => 'Sea is normal.'
+        ];
+
+        return view('fisherman', compact('boats', 'weather'));
     }
 
     // 2. Store a new boat in the database
