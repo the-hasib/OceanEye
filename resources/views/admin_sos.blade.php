@@ -4,68 +4,160 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - SOS Monitor</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
-        /* Dark Theme Styles */
-        * { margin:0; padding:0; box-sizing:border-box; font-family: "Segoe UI", sans-serif; }
-        body { background: radial-gradient(circle at top, #0b2740, #061726); color:#eaf6ff; display: flex; flex-direction: column; min-height: 100vh; }
+        /* --- 1. THEME VARIABLES (Consistent Across App) --- */
+        :root {
+            --glass-bg: rgba(6, 18, 38, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --neon-cyan: #00f3ff;
+            --neon-red: #ff003c;
+            --neon-green: #00ff80;
+            --neon-yellow: #f1c40f;
+            --text-main: #ffffff;
+            --text-muted: #cbd5e1;
+        }
 
-        /* Layout */
-        .admin-layout { display:flex; flex: 1; }
-        .sidebar { width:240px; background:#0c3558; padding:20px; flex-shrink:0; display: flex; flex-direction: column; }
-        .brand { font-size:22px; font-weight:700; margin-bottom:30px; color: white; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Rajdhani', sans-serif; }
 
-        .sidebar nav { display: flex; flex-direction: column; flex-grow: 1; }
-        .sidebar nav a, .sidebar nav button { display:flex; align-items:center; gap:12px; padding:12px 14px; margin-bottom:8px; color:#cfe9ff; text-decoration:none; border-radius:10px; transition:.3s; background: none; border: none; width: 100%; font-size: 16px; cursor: pointer; text-align: left; }
-        .sidebar nav a:hover, .sidebar nav a.active, .sidebar nav button:hover { background:#134a73; color: white; }
+        body {
+            background: url("{{ asset('login.jpg') }}") no-repeat center center/cover fixed;
+            min-height: 100vh;
+            color: var(--text-main);
+            display: flex; flex-direction: column;
+        }
+
+        /* Dark Overlay */
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+
+        /* --- 2. LAYOUT --- */
+        .admin-layout { display:flex; flex: 1; height: 100vh; overflow: hidden; }
+
+        /* --- 3. SIDEBAR (Glass Style) --- */
+        .sidebar {
+            width: 260px;
+            background: rgba(5, 15, 30, 0.95); /* Solid transparent look */
+            border-right: 1px solid var(--glass-border);
+            padding: 25px;
+            display: flex; flex-direction: column;
+            flex-shrink: 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .brand {
+            font-size: 28px; font-weight: 700; margin-bottom: 40px;
+            color: white; text-transform: uppercase; letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--neon-cyan);
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .sidebar nav { display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
+
+        .sidebar nav a, .sidebar nav button {
+            display:flex; align-items:center; gap:15px; padding:12px 15px;
+            color: var(--text-muted); text-decoration:none;
+            border-radius: 8px; transition: 0.3s; background: transparent; border: 1px solid transparent;
+            width: 100%; font-size: 16px; cursor: pointer; text-align: left;
+            font-weight: 600; letter-spacing: 0.5px;
+        }
+
+        /* Hover & Active States */
+        .sidebar nav a:hover, .sidebar nav a.active {
+            background: rgba(0, 243, 255, 0.1);
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
+        }
+
+        /* Logout Button */
         .logout-form { margin-top: auto; }
-        .sidebar nav button.logout { background:#133b55; color: #ff5d4f; }
+        .sidebar nav button.logout {
+            color: var(--neon-red);
+            border: 1px solid rgba(255, 0, 60, 0.3);
+        }
+        .sidebar nav button.logout:hover {
+            background: var(--neon-red); color: white;
+            box-shadow: 0 0 15px var(--neon-red); border-color: var(--neon-red);
+        }
 
-        /* Main Content */
-        .main { flex:1; padding:28px; display: flex; flex-direction: column; }
-        .topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; }
+        /* --- 4. MAIN CONTENT --- */
+        .main {
+            flex:1; padding: 30px;
+            display: flex; flex-direction: column;
+            overflow-y: auto; /* Scrollable content */
+        }
 
-        /* SOS CARDS */
-        .sos-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        /* TOP BAR */
+        .topbar {
+            display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;
+            background: var(--glass-bg); padding: 15px 25px; border-radius: 12px;
+            border: 1px solid var(--glass-border);
+        }
+        .topbar h1 { font-size: 20px; font-weight: 600; color: var(--neon-red); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; text-shadow: 0 0 10px rgba(255,0,60,0.3); }
+        .time-box { display:flex; gap:10px; align-items:center; font-family: monospace; color: var(--text-muted); }
+
+        /* --- 5. SOS CARDS (Glass Alert Theme) --- */
+        .sos-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 25px; }
 
         .sos-card {
-            background: rgba(231, 76, 60, 0.1); /* Red tint */
-            border: 2px solid #e74c3c;
-            border-radius: 15px;
-            padding: 20px;
+            background: linear-gradient(135deg, rgba(255, 0, 60, 0.15), rgba(6, 18, 38, 0.9));
+            border: 1px solid var(--neon-red);
+            border-radius: 16px;
+            padding: 25px;
             position: relative;
-            animation: pulse 2s infinite;
+            box-shadow: 0 0 20px rgba(255, 0, 60, 0.2);
+            animation: pulse-border 2s infinite;
         }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(255, 0, 60, 0.4); border-color: var(--neon-red); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 0, 60, 0); border-color: #ff5d4f; }
+            100% { box-shadow: 0 0 0 0 rgba(255, 0, 60, 0); border-color: var(--neon-red); }
         }
 
-        .sos-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid rgba(231, 76, 60, 0.3); padding-bottom: 10px; }
-        .sos-title { color: #ff5d4f; font-weight: bold; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
+        .sos-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 0, 60, 0.3); padding-bottom: 15px;
+        }
+        .sos-title { color: var(--neon-red); font-weight: 700; font-size: 18px; text-transform: uppercase; letter-spacing: 2px; }
 
-        .info-row { margin-bottom: 8px; display: flex; align-items: center; gap: 10px; font-size: 15px; color: #eaf6ff; }
-        .info-row i { width: 20px; color: #ff5d4f; text-align: center; }
+        /* Rows */
+        .info-row { margin-bottom: 10px; display: flex; align-items: center; gap: 12px; font-size: 15px; color: var(--text-main); }
+        .info-row i { width: 20px; color: var(--neon-red); text-align: center; }
 
-        /* New Styles for Boat Info */
-        .boat-info { background: rgba(59, 188, 255, 0.1); border: 1px solid #3bbcff; padding: 10px; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-        .boat-icon { font-size: 24px; color: #3bbcff; }
+        /* Boat Info Box */
+        .boat-info {
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid var(--neon-cyan);
+            padding: 12px; border-radius: 8px; margin-bottom: 20px;
+            display: flex; align-items: center; gap: 15px;
+        }
+        .boat-icon { font-size: 24px; color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); }
 
+        /* Map Button */
         .btn-map {
-            display: block; width: 100%; text-align: center;
-            background: #3bbcff; color: #061726;
-            padding: 10px; border-radius: 8px; margin-top: 15px;
-            text-decoration: none; font-weight: bold;
+            display: flex; justify-content: center; align-items: center; gap: 10px; width: 100%;
+            background: transparent; color: var(--neon-cyan); border: 1px solid var(--neon-cyan);
+            padding: 10px; border-radius: 8px; margin-top: 20px;
+            text-decoration: none; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+            transition: 0.3s;
         }
-        .btn-map:hover { background: #29a0e0; }
+        .btn-map:hover { background: var(--neon-cyan); color: black; box-shadow: 0 0 15px var(--neon-cyan); }
 
-        .empty-state { text-align: center; margin-top: 50px; opacity: 0.6; }
-        .empty-state i { font-size: 60px; color: #2ecc71; margin-bottom: 20px; }
+        /* Empty State */
+        .empty-state { text-align: center; margin-top: 80px; opacity: 0.7; }
+        .empty-state i { font-size: 60px; color: var(--neon-green); margin-bottom: 20px; text-shadow: 0 0 20px var(--neon-green); }
+        .empty-state h2 { color: var(--neon-green); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
 
-        .footer { text-align: center; padding: 20px; color: rgba(255, 255, 255, 0.4); font-size: 13px; margin-top: auto; }
+        /* Footer */
+        .footer { text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px; margin-top: auto; opacity: 0.6; }
     </style>
 </head>
 <body>
@@ -73,7 +165,7 @@
 <div class="admin-layout">
 
     <aside class="sidebar">
-        <div class="brand">🌊 OceanEye</div>
+        <div class="brand"><i class="fas fa-water"></i> OceanEye</div>
         <nav>
             <a href="{{ route('admin.dashboard') }}"
                class="{{ Route::is('admin.dashboard') ? 'active' : '' }}">
@@ -114,8 +206,11 @@
 
     <main class="main">
         <header class="topbar">
-            <h1 style="color: #ff5d4f;"><i class="fa-solid fa-tower-broadcast"></i> Live SOS Monitor</h1>
-            <div style="color: #cfe9ff;"><i class="fa-regular fa-clock"></i> Live Feed</div>
+            <h1><i class="fa-solid fa-tower-broadcast"></i> Live SOS Monitor</h1>
+            <div class="time-box">
+                <i class="fa-regular fa-clock"></i>
+                <span id="liveTime">Loading...</span>
+            </div>
         </header>
 
         <div class="sos-container">
@@ -123,21 +218,21 @@
                 <div class="sos-card">
                     <div class="sos-header">
                         <span class="sos-title">Emergency Signal</span>
-                        <i class="fa-solid fa-rss fa-fade" style="color: red;"></i>
+                        <i class="fa-solid fa-rss fa-beat-fade" style="color: var(--neon-red); font-size: 20px;"></i>
                     </div>
 
                     @if($alert->boat)
                         <div class="boat-info">
                             <i class="fa-solid fa-ship boat-icon"></i>
                             <div>
-                                <div style="font-weight: bold; color: #3bbcff;">{{ $alert->boat->boat_name }}</div>
-                                <div style="font-size: 12px; opacity: 0.8;">{{ $alert->boat->registration_number }}</div>
+                                <div style="font-weight: 700; color: white;">{{ $alert->boat->boat_name }}</div>
+                                <div style="font-size: 13px; color: var(--text-muted); font-family: monospace;">{{ $alert->boat->registration_number }}</div>
                             </div>
                         </div>
                     @else
-                        <div class="boat-info" style="border-color: gray;">
-                            <i class="fa-solid fa-question boat-icon" style="color: gray;"></i>
-                            <div style="color: gray;">Unknown Boat</div>
+                        <div class="boat-info" style="border-color: var(--text-muted); background: rgba(255,255,255,0.05);">
+                            <i class="fa-solid fa-question boat-icon" style="color: var(--text-muted); text-shadow: none;"></i>
+                            <div style="color: var(--text-muted);">Unknown Boat</div>
                         </div>
                     @endif
 
@@ -151,9 +246,9 @@
                     </div>
                     <div class="info-row">
                         <i class="fa-solid fa-location-dot"></i>
-                        <span>
-                            Lat: {{ number_format($alert->latitude, 4) }},
-                            Lng: {{ number_format($alert->longitude, 4) }}
+                        <span style="font-family: monospace; color: var(--neon-yellow);">
+                            LAT: {{ number_format($alert->latitude, 4) }},
+                            LNG: {{ number_format($alert->longitude, 4) }}
                         </span>
                     </div>
                     <div class="info-row">
@@ -162,7 +257,7 @@
                     </div>
 
                     <a href="{{ route('admin.map') }}" class="btn-map">
-                        <i class="fa-solid fa-map-location-dot"></i> View on Map
+                        <i class="fa-solid fa-map-location-dot"></i> Locate on Map
                     </a>
                 </div>
             @empty
@@ -181,6 +276,14 @@
     </main>
 
 </div>
+
+<script>
+    function updateTime(){
+        document.getElementById("liveTime").innerText = new Date().toLocaleString("en-GB");
+    }
+    updateTime();
+    setInterval(updateTime,1000);
+</script>
 
 </body>
 </html>
