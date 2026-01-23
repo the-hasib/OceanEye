@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- BASIC RESET --- */
+        /* Basic Reset */
         * {
             margin: 0;
             padding: 0;
@@ -15,225 +15,176 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* --- ERROR MESSAGE STYLE --- */
-        .error-msg {
-            color: #ff6b6b; /* Bright Red */
-            font-size: 11px;
-            margin-top: 5px;
-            display: block;
-            font-weight: bold;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
-        }
-        .error-msg a {
-            color: #fff;
-            text-decoration: underline;
-        }
-
-        /* --- BACKGROUND --- */
-        .bg-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("{{ asset('reg.jpg') }}");
+        body {
+            /* SAME BACKGROUND AS LOGIN PAGE */
+            background-image: url("{{ asset('login.jpg') }}");
             background-size: cover;
             background-position: center;
-            z-index: -1;
-        }
-
-        body {
             height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             overflow: hidden;
         }
 
-        /* --- ANIMATION --- */
-        @keyframes floatFrame {
-            0% { transform: translateY(0px); box-shadow: 0 25px 50px rgba(0,0,0,0.8); }
-            50% { transform: translateY(-20px); box-shadow: 0 35px 60px rgba(0,0,0,0.6); }
-            100% { transform: translateY(0px); box-shadow: 0 25px 50px rgba(0,0,0,0.8); }
-        }
-
-        /* --- IPHONE FRAME --- */
+        /* --- IPHONE 15 FRAME (EXACT MATCH WITH LOGIN) --- */
         .iphone-15 {
-            width: 360px;
-            height: 740px;
-            border: 0.5px solid #1a1a1a;
+            width: 360px;  /* Exact match */
+            height: 740px; /* Exact match */
+            border: 0.5px solid rgba(0, 0, 0, 0.8);
             border-radius: 55px;
             position: relative;
-            background: rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            padding: 15px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             display: flex;
             flex-direction: column;
             align-items: center;
-            animation: floatFrame 15s ease-in-out infinite;
-            overflow: hidden;
+            padding: 20px 30px;
+            text-align: center;
+            animation: float 25s ease-in-out infinite;
         }
 
-        /* --- DYNAMIC ISLAND --- */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
         .dynamic-island {
             width: 120px;
             height: 35px;
             background: black;
             border-radius: 20px;
-            position: absolute;
-            top: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 20;
+            margin-bottom: 20px;
+            margin-top: 5px;
+            flex-shrink: 0;
         }
 
-        /* --- SCROLLABLE AREA --- */
+        /* --- HEADER SECTION --- */
+        .logo-icon {
+            font-size: 50px;
+            background: linear-gradient(180deg, #00d2ff 0%, #3a7bd5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+            filter: drop-shadow(0 0 10px rgba(0, 210, 255, 0.4));
+        }
+
+        h1.brand-name {
+            font-size: 26px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        p.tagline {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 15px;
+        }
+
+        /* --- SCROLLABLE FORM AREA --- */
         .scroll-container {
             width: 100%;
-            height: 100%;
             overflow-y: auto;
-            padding: 10px;
-            padding-top: 60px;
-            padding-bottom: 20px;
+            padding-right: 5px;
             scrollbar-width: none;
+            flex: 1;
         }
         .scroll-container::-webkit-scrollbar { display: none; }
-
-        /* --- HEADER --- */
-        h2 {
-            color: white;
-            text-align: center;
-            font-size: 28px;
-            margin-bottom: 20px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-            letter-spacing: 1px;
-        }
 
         /* --- ROLE SWITCHER --- */
         .role-switcher {
             display: flex;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 30px;
-            padding: 5px;
-            margin-bottom: 25px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 20px;
         }
-
         .role-btn {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            background: transparent;
-            color: rgba(255,255,255, 0.6);
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 25px;
-            transition: 0.3s;
+            flex: 1; padding: 8px; border: none;
+            background: transparent; color: rgba(255,255,255,0.6);
+            font-size: 12px; font-weight: bold; cursor: pointer;
+            border-radius: 10px; transition: 0.3s;
         }
-
         .role-btn.active {
-            background: rgba(0, 210, 255, 0.3);
-            color: #000;
-            box-shadow: 0 0 15px rgba(0, 210, 255, 0.6);
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
-        /* --- INPUT FIELDS --- */
-        .input-group {
-            position: relative;
-            margin-bottom: 15px;
-        }
-
-        .input-group label {
-            display: block;
-            color: #ccc;
-            font-size: 12px;
-            margin-bottom: 5px;
-            padding-left: 5px;
-        }
+        /* --- INPUTS --- */
+        .input-group { position: relative; margin-bottom: 15px; text-align: left; }
 
         input {
             width: 100%;
-            padding: 12px 15px;
-            padding-right: 40px;
+            padding: 10px 15px;
+            padding-right: 35px;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
             color: white;
-            font-size: 14px;
+            font-size: 13px;
             outline: none;
             transition: 0.3s;
         }
-
+        input::placeholder { color: rgba(255, 255, 255, 0.6); }
         input:focus {
-            border-color: #f2f5f6;
             background: rgba(255, 255, 255, 0.2);
+            border-color: #00d2ff;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
         }
-
         .input-icon {
-            position: absolute;
-            right: 15px;
-            top: 38px;
-            color: #aaa;
+            position: absolute; right: 12px; top: 50%;
+            transform: translateY(-50%);
+            color: white; opacity: 0.7; font-size: 12px;
         }
 
-        /* --- SUBMIT BUTTON --- */
+        /* --- BUTTON --- */
         .btn-register {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             border: none;
-            border-radius: 15px;
+            border-radius: 12px;
             background: white;
-            color: #0072ff;
-            font-size: 18px;
+            color: #006994;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 20px;
-            transition: all 0.4s ease;
-            box-shadow: 0 4px 15px rgba(0, 114, 255, 0.2);
+            margin-top: 10px;
+            margin-bottom: 10px;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
+        .btn-register:hover { transform: scale(1.02); background: #e0f7fa; }
 
-        .btn-register:hover {
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 8px 25px rgba(0, 198, 255, 0.4);
-            background: #f8f9fa;
-        }
+        .bottom-links { margin-top: 5px; font-size: 12px; color: rgba(255, 255, 255, 0.8); }
+        .bottom-links a { color: #00d2ff; text-decoration: none; font-weight: bold; }
 
-        /* --- FOOTER --- */
-        .footer-link {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 13px;
-            color: white;
-        }
-        .footer-link a { color: #00d2ff; text-decoration: none; font-weight: bold; }
-        .footer-link a:hover { text-decoration: underline; text-shadow: 0 0 5px #00d2ff; }
-
-        .copyright-text {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.5);
-            font-weight: 300;
-            letter-spacing: 0.5px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 10px;
+        .copyright {
+            font-size: 10px; color: rgba(255, 255, 255, 0.5);
+            margin-top: 15px; width: 100%; text-align: center;
+            position: absolute; bottom: 20px; left: 0;
         }
 
         .hidden { display: none; }
-
+        .error-msg { color: #ff6b6b; font-size: 10px; margin-top: 3px; display: block; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="bg-container"></div>
-
 <div class="iphone-15">
-
     <div class="dynamic-island"></div>
 
-    <div class="scroll-container">
+    <div class="logo-icon"><i class="fas fa-water"></i></div>
+    <h1 class="brand-name">OceanEye</h1>
+    <p class="tagline">Create Your Account</p>
 
-        <h2>Create Account</h2>
+    <div class="scroll-container">
 
         <div class="role-switcher">
             <button type="button" class="role-btn active" onclick="setRole('fisherman')">Fisherman</button>
@@ -246,37 +197,23 @@
 
             <div id="fisherman-fields">
                 <div class="input-group">
-                    <label>Full Name</label>
-                    <input type="text" name="name" placeholder="Enter Full Name" value="{{ old('name') }}">
+                    <input type="text" name="name" placeholder="Full Name" value="{{ old('name') }}">
                     <i class="fas fa-user input-icon"></i>
                 </div>
-
                 <div class="input-group">
-                    <label>Mobile Number</label>
-                    <input type="text" name="mobile" placeholder="017xxxxxxxx" value="{{ old('mobile') }}">
+                    <input type="text" name="mobile" placeholder="Mobile Number" value="{{ old('mobile') }}">
                     <i class="fas fa-phone input-icon"></i>
-                    @error('mobile')
-                    <small class="error-msg">{{ $message }} <a href="{{ route('login') }}">Login Here</a></small>
-                    @enderror
+                    @error('mobile') <small class="error-msg">{{ $message }}</small> @enderror
                 </div>
-
                 <div class="input-group">
-                    <label>Fishing License No</label>
-                    <input type="text" name="license_no" placeholder="License Number" value="{{ old('license_no') }}">
+                    <input type="text" name="license_no" placeholder="Fishing License No" value="{{ old('license_no') }}">
                     <i class="fas fa-id-card input-icon"></i>
-                    @error('license_no')
-                    <small class="error-msg">{{ $message }} <a href="{{ route('login') }}">Login Here</a></small>
-                    @enderror
                 </div>
-
                 <div class="input-group">
-                    <label>NID Number</label>
-                    <input type="text" name="nid" placeholder="National ID" value="{{ old('nid') }}">
+                    <input type="text" name="nid" placeholder="NID Number" value="{{ old('nid') }}">
                     <i class="fas fa-fingerprint input-icon"></i>
                 </div>
-
                 <div class="input-group">
-                    <label>Address / Base Port</label>
                     <input type="text" name="address" placeholder="Home Port Address" value="{{ old('address') }}">
                     <i class="fas fa-anchor input-icon"></i>
                 </div>
@@ -284,55 +221,40 @@
 
             <div id="guard-fields" class="hidden">
                 <div class="input-group">
-                    <label>Officer Name</label>
                     <input type="text" name="officer_name" placeholder="Officer Name" value="{{ old('officer_name') }}">
                     <i class="fas fa-user-shield input-icon"></i>
                 </div>
-
                 <div class="input-group">
-                    <label>Official Email</label>
-                    <input type="email" name="email" placeholder="official@coastguard.gov.bd" value="{{ old('email') }}">
+                    <input type="email" name="email" placeholder="Official Email" value="{{ old('email') }}">
                     <i class="fas fa-envelope input-icon"></i>
-                    @error('email')
-                    <small class="error-msg">{{ $message }} <a href="{{ route('login') }}">Login Here</a></small>
-                    @enderror
+                    @error('email') <small class="error-msg">{{ $message }}</small> @enderror
                 </div>
-
                 <div class="input-group">
-                    <label>Service ID</label>
-                    <input type="text" name="service_id" placeholder="Official Service ID" value="{{ old('service_id') }}">
+                    <input type="text" name="service_id" placeholder="Service ID" value="{{ old('service_id') }}">
                     <i class="fas fa-badge-sheriff input-icon"></i>
-                    @error('service_id')
-                    <small class="error-msg">{{ $message }} <a href="{{ route('login') }}">Login Here</a></small>
-                    @enderror
                 </div>
-
                 <div class="input-group">
-                    <label>Station Name / Zone</label>
-                    <input type="text" name="station_zone" placeholder="e.g. Chittagong West Zone" value="{{ old('station_zone') }}">
+                    <input type="text" name="station_zone" placeholder="Station Zone" value="{{ old('station_zone') }}">
                     <i class="fas fa-building input-icon"></i>
                 </div>
             </div>
 
-            <div class="input-group" style="margin-top: 20px;">
-                <label>Set Password</label>
-                <input type="password" name="password" placeholder="Create a strong password" required>
+            <div class="input-group">
+                <input type="password" name="password" placeholder="Set Password" required>
                 <i class="fas fa-lock input-icon"></i>
             </div>
 
-            <button type="submit" class="btn-register">REGISTER NOW</button>
-
-            <p class="footer-link">
-                Already have an ID? <a href="{{ route('login') }}">Login Here</a>
-            </p>
-
-            <div class="copyright-text">
-                &copy; Team The Error Squad. All rights reserved.
-            </div>
-
-            <br>
+            <button type="submit" class="btn-register">Register Now</button>
         </form>
+
+        <p class="bottom-links">
+            Already Registered? <a href="{{ route('login') }}">Sign In</a>
+        </p>
+
+        <div style="height: 30px;"></div>
     </div>
+
+    <div class="copyright">Team The Error Squad. All rights reserved.</div>
 </div>
 
 <script>

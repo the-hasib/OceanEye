@@ -43,7 +43,7 @@
             align-items: center;
             padding: 20px 30px;
             text-align: center;
-            animation: float 15s ease-in-out infinite;
+            animation: float 25s ease-in-out infinite;
         }
 
         @keyframes float {
@@ -93,25 +93,13 @@
             margin-bottom: 30px;
         }
 
-        /* --- ALERTS (SUCCESS & ERROR) --- */
+        /* --- ALERTS --- */
         .alert {
-            width: 100%;
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 12px;
-            margin-bottom: 15px;
-            text-align: center;
+            width: 100%; padding: 10px; border-radius: 10px;
+            font-size: 12px; margin-bottom: 15px; text-align: center;
         }
-        .alert-success {
-            background: rgba(40, 167, 69, 0.2);
-            border: 1px solid #28a745;
-            color: #d4edda;
-        }
-        .alert-danger {
-            background: rgba(220, 53, 69, 0.2);
-            border: 1px solid #dc3545;
-            color: #f8d7da;
-        }
+        .alert-success { background: rgba(40, 167, 69, 0.2); border: 1px solid #28a745; color: #d4edda; }
+        .alert-danger { background: rgba(220, 53, 69, 0.2); border: 1px solid #dc3545; color: #f8d7da; }
 
         .form-area { width: 100%; margin-top: 10px; }
         .input-group { position: relative; margin-bottom: 30px; text-align: left; }
@@ -134,39 +122,32 @@
             box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
         }
         .input-icon {
-            position: absolute;
-            right: 15px;
-            top: 50%;
+            position: absolute; right: 15px; top: 50%;
             transform: translateY(-50%);
-            color: white;
-            opacity: 0.7;
+            color: white; opacity: 0.7;
         }
 
         .btn-login {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 15px;
-            background: white;
-            color: #006994;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: 0.3s;
+            width: 100%; padding: 15px; border: none; border-radius: 15px;
+            background: white; color: #006994;
+            font-size: 18px; font-weight: bold; cursor: pointer;
+            margin-top: 10px; transition: 0.3s;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
         .btn-login:hover { transform: scale(1.02); background: #e0f7fa; }
 
         .bottom-links { margin-top: 25px; font-size: 13px; color: rgba(255, 255, 255, 0.8); }
         .bottom-links a { color: #00d2ff; text-decoration: none; font-weight: bold; }
+
+        /* --- [UPDATED] COPYRIGHT INSIDE FRAME --- */
         .copyright {
             position: absolute;
-            bottom: -40px;
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.6);
+            bottom: 20px; /* আগে -40px ছিল, এখন 20px করে ভেতরে আনা হয়েছে */
+            left: 0;
             width: 100%;
             text-align: center;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.5);
         }
     </style>
 </head>
@@ -181,19 +162,14 @@
     <p class="tagline">Advanced Marine Safety System</p>
 
     @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+    @if($errors->any())
+        <div class="alert alert-danger">{{ $errors->first() }}</div>
     @endif
 
-    @if($errors->any())
-        <div class="alert alert-danger">
-            {{ $errors->first() }}
-        </div>
-    @endif
     <form action="{{ route('login.post') }}" method="POST" class="form-area">
         @csrf
-
         <div class="input-group">
             <input type="text" name="email" placeholder="Email or Number" value="{{ old('email') }}" required>
             <i class="fas fa-satellite-dish input-icon"></i>
