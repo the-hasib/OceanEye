@@ -4,33 +4,35 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\SosAlert;
+use App\Models\Boat;
 use Illuminate\Support\Facades\Auth;
 
 class CoastGuardController extends Controller
 {
     public function index()
     {
-        // --- SECURITY CHECK (Easy Way) ---
-        // If user is NOT a coast_guard, stop them here.
+        // 1. Security Check
         if (Auth::user()->role !== 'coast_guard') {
-            abort(403, 'Unauthorized Access'); // Show Error Page
+            abort(403, 'Unauthorized Access');
         }
 
-        // 1. Get active alerts
+        // 2. Active SOS Alerts
         $active_alerts = SosAlert::where('status', 'active')
             ->with('user')
             ->latest()
             ->get();
 
-        // 2. Count missions
+        // 3. Mission Count
         $mission_count = SosAlert::where('resolved_by', Auth::id())->count();
 
-        return view('coast_guard', compact('active_alerts', 'mission_count'));
+        // 4. Get All Boats
+        $boats = Boat::all();
+
+        return view('coast_guard', compact('active_alerts', 'mission_count', 'boats'));
     }
 
     public function resolve($id)
     {
-        // Security Check here too
         if (Auth::user()->role !== 'coast_guard') {
             abort(403, 'Unauthorized Access');
         }
