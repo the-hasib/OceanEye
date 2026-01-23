@@ -27,7 +27,7 @@
         .topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; }
 
         /* SOS CARDS */
-        .sos-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .sos-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
 
         .sos-card {
             background: rgba(231, 76, 60, 0.1); /* Red tint */
@@ -47,8 +47,20 @@
         .sos-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid rgba(231, 76, 60, 0.3); padding-bottom: 10px; }
         .sos-title { color: #ff5d4f; font-weight: bold; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
 
-        .info-row { margin-bottom: 8px; display: flex; align-items: center; gap: 10px; font-size: 15px; }
+        .info-row { margin-bottom: 8px; display: flex; align-items: center; gap: 10px; font-size: 15px; color: #eaf6ff; }
         .info-row i { width: 20px; color: #ff5d4f; text-align: center; }
+
+        /* New Styles for Boat Info */
+        .boat-info { background: rgba(59, 188, 255, 0.1); border: 1px solid #3bbcff; padding: 10px; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .boat-icon { font-size: 24px; color: #3bbcff; }
+
+        .btn-map {
+            display: block; width: 100%; text-align: center;
+            background: #3bbcff; color: #061726;
+            padding: 10px; border-radius: 8px; margin-top: 15px;
+            text-decoration: none; font-weight: bold;
+        }
+        .btn-map:hover { background: #29a0e0; }
 
         .empty-state { text-align: center; margin-top: 50px; opacity: 0.6; }
         .empty-state i { font-size: 60px; color: #2ecc71; margin-bottom: 20px; }
@@ -114,26 +126,44 @@
                         <i class="fa-solid fa-rss fa-fade" style="color: red;"></i>
                     </div>
 
+                    @if($alert->boat)
+                        <div class="boat-info">
+                            <i class="fa-solid fa-ship boat-icon"></i>
+                            <div>
+                                <div style="font-weight: bold; color: #3bbcff;">{{ $alert->boat->boat_name }}</div>
+                                <div style="font-size: 12px; opacity: 0.8;">{{ $alert->boat->registration_number }}</div>
+                            </div>
+                        </div>
+                    @else
+                        <div class="boat-info" style="border-color: gray;">
+                            <i class="fa-solid fa-question boat-icon" style="color: gray;"></i>
+                            <div style="color: gray;">Unknown Boat</div>
+                        </div>
+                    @endif
+
                     <div class="info-row">
                         <i class="fa-solid fa-user"></i>
-                        <strong>{{ $alert->user->name }}</strong>
+                        <strong>Owner: {{ $alert->user->name }}</strong>
                     </div>
                     <div class="info-row">
                         <i class="fa-solid fa-phone"></i>
-                        {{ $alert->user->mobile }}
+                        {{ $alert->user->mobile ?? $alert->user->email }}
                     </div>
                     <div class="info-row">
                         <i class="fa-solid fa-location-dot"></i>
-                        {{ $alert->location }}
+                        <span>
+                            Lat: {{ number_format($alert->latitude, 4) }},
+                            Lng: {{ number_format($alert->longitude, 4) }}
+                        </span>
                     </div>
                     <div class="info-row">
                         <i class="fa-regular fa-clock"></i>
                         {{ $alert->created_at->diffForHumans() }}
                     </div>
 
-                    <div style="margin-top: 15px; font-size: 13px; color: #ffa500; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 5px;">
-                        Status: Waiting for Coast Guard
-                    </div>
+                    <a href="{{ route('admin.map') }}" class="btn-map">
+                        <i class="fa-solid fa-map-location-dot"></i> View on Map
+                    </a>
                 </div>
             @empty
             @endforelse

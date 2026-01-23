@@ -1,58 +1,74 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Auth;
 
-use App\Models\SosAlert;
 use Illuminate\Http\Request;
+use App\Models\SosAlert;
 use Illuminate\Support\Facades\Auth;
 
 class SosController extends Controller
 {
-    // 1. Fisherman sends SOS
-    public function store()
-    {
-        // Check if user already has an active SOS (Prevent duplicate spamming)
-        $existing = SosAlert::where('user_id', Auth::id())
-            ->where('status', 'active')
-            ->first();
-
-        if(!$existing) {
-            SosAlert::create([
-                'user_id' => Auth::id(),
-                'location' => '21.9N, 89.9E', // Fake GPS for now
-                'status' => 'active'
-            ]);
-            return back()->with('success', 'SOS Signal Sent! Help is on the way!');
-        }
-
-        return back()->with('error', 'You already have an active SOS alert!');
-    }
-
-    // 2. Admin/Coast Guard views SOS List
-    public function index()
-    {
-        // Get only ACTIVE alerts with User info
-        $alerts = SosAlert::where('status', 'active')->with('user')->get();
-
-        return view('admin_sos', compact('alerts'));
-    }
+    /**
+     * Handle the SOS signal sent by a Fisherman.
+     * It validates the request, generates a simulated location if real GPS is missing,
+     * and saves the emergency alert to the database.
+     */
     public function store(Request $request)
     {
+        // 1. Validation: Ensure a boat is selected by the fisherman
         $request->validate([
-            'boat_id' => 'required', // after found boat id then send sos
+            'boat_id' => 'required', // Mandatory: We need to know which boat is in danger
             'latitude' => 'nullable',
             'longitude' => 'nullable',
         ]);
 
+        // 2. Location Logic: Handle missing GPS coordinates
+        // If the browser fails to provide a location, we generate a random coordinate
+        // within the Bay of Bengal / Sundarbans region to simulate the boat's position.
+        // Coordinate Range: Lat 21.50 - 22.00, Lng 89.00 - 89.90
+
+        $randomLat = 21.50 + (mt_rand(0, 5000) / 10000);
+        $randomLng = 89.00 + (mt_rand(0, 9000) / 10000);
+
+        // Determine final location: Use real GPS if available, otherwise use the random simulation
+        $finalLat = $request->latitude ? $request->latitude : $randomLat;
+        $finalLng = $request->longitude ? $request->longitude : $randomLng;
+
+        // 3. Spam Prevention: Check if this user already has an active SOS
+        // We do not want to spam the Coast Guard with duplicate alerts.
+        $existingAlert = SosAlert::where('user_id', Auth::id())
+            ->where('status', 'active')
+            ->exists();
+
+        if ($existingAlert) {
+            return back()->with('error', 'Please wait! You already have an active SOS alert in progress.');
+        }
+
+        // 4. Save the SOS Alert to the Database
         SosAlert::create([
-            'user_id' => Auth::id(),
-            'boat_id' => $request->boat_id, // save boat id
-            'status' => 'active',
-            'latitude' => $request->latitude ?? 0.0000,
-            'longitude' => $request->longitude ?? 0.0000,
+            'user_id'   => Auth::id(),        // The fisherman (Owner)
+            'boat_id'   => $request->boat_id, // The specific boat details
+            'status'    => 'active',          // Mark the alert as currently active
+            'latitude'  => $finalLat,         // Saved Latitude
+            'longitude' => $finalLng,         // Saved Longitude
         ]);
 
-        return back()->with('success', 'SOS Sent! Coast Guard has been notified for your boat.');
+        return back()->with('success', 'SOS Signal Sent! The Coast Guard has received your boat\'s location.');
+    }
+
+    /**
+     * Display the list of active SOS alerts to the Admin or Coast Guard.
+     * Uses Eager Loading to fetch User and Boat details efficiently.
+     */
+    public function index()
+    {
+        // Fetch only 'active' alerts
+        // 'with(['user', 'boat'])' ensures we get the Owner's Name and Boat Details
+        $alerts = SosAlert::where('status', 'active')
+            ->with(['user', 'boat'])
+            ->latest() // Sort by newest first
+            ->get();
+
+        return view('admin_sos', compact('alerts'));
     }
 }
