@@ -88,5 +88,8 @@ Route::middleware(['auth'])->group(function () {
     // 2. Action: Resolve SOS
     Route::get('/coastguard/resolve/{id}', [App\Http\Controllers\CoastGuardController::class, 'resolve'])
         ->name('sos.resolve');
+    // For send Signal Number
+    Route::post('/coastguard/warning', [App\Http\Controllers\CoastGuardController::class, 'sendWarning'])
+        ->name('coastguard.warning');
 
 });

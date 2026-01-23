@@ -77,11 +77,56 @@
 
 <main class="layout">
     <aside class="side-cards">
+
         <div class="info-card">
             <h3>🌦 Weather</h3>
             <p>Temp: <span id="temp">28</span> °C</p>
             <p>Wind: <span id="wind">12</span> km/h</p>
+
+            <hr style="border-color: #1d4f78; margin: 10px 0;">
+
+            <form action="{{ route('coastguard.warning') }}" method="POST">
+                @csrf
+
+                <label style="font-size: 12px; color: #6fd3ff; margin-bottom: 5px; display: block;">Select Danger Signal:</label>
+
+                <div style="display: flex; gap: 5px;">
+                    <select name="signal" required style="
+                        flex: 1;
+                        padding: 8px;
+                        background: #061a2e;
+                        color: white;
+                        border: 1px solid #134e7a;
+                        border-radius: 5px;
+                        outline: none;">
+                        <option value="" disabled selected>Select...</option>
+                        <option value="1">Signal 1</option>
+                        <option value="2">Signal 2</option>
+                        <option value="3">Signal 3</option>
+                        <option value="4">Signal 4 (Caution)</option>
+                        <option value="5">Signal 5 (Danger)</option>
+                        <option value="6">Signal 6 (Danger)</option>
+                        <option value="7">Signal 7 (Danger)</option>
+                        <option value="8">Signal 8 (Great Danger)</option>
+                        <option value="9">Signal 9 (Great Danger)</option>
+                        <option value="10">Signal 10 (Great Danger)</option>
+                    </select>
+
+                    <button type="submit"
+                            onclick="return confirm('Are you sure you want to broadcast this signal?')"
+                            style="
+                            background: #e74c3c;
+                            color: white;
+                            border: none;
+                            padding: 8px 12px;
+                            border-radius: 5px;
+                            cursor: pointer;">
+                        <i class="fa-solid fa-tower-broadcast"></i>
+                    </button>
+                </div>
+            </form>
         </div>
+
         <div class="info-card">
             <h3>🌊 Waves</h3>
             <p>Height: <span id="wave">Normal</span></p>
@@ -107,9 +152,16 @@
 </main>
 
 @if(session('success'))
-    <div style="margin: 0 20px; padding: 15px; background: #2ecc71; color: white; border-radius: 8px; text-align: center;">
+    <div style="margin: 0 20px 15px; padding: 15px; background: #2ecc71; color: white; border-radius: 8px; text-align: center;">
         {{ session('success') }}
     </div>
+@endif
+
+@if(session('warning'))
+    <div style="margin: 0 20px 15px; padding: 15px; background: #e74c3c; color: white; border-radius: 8px; text-align: center; animation: blink 1s infinite;">
+        <i class="fa-solid fa-triangle-exclamation"></i> {{ session('warning') }}
+    </div>
+    <style> @keyframes blink { 50% { opacity: 0.7; } } </style>
 @endif
 
 <section class="table-section">

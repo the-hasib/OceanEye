@@ -6,6 +6,7 @@ use App\Models\WeatherUpdate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Boat;
+use Illuminate\Support\Facades\Cache;
 
 class BoatController extends Controller
 {
@@ -18,7 +19,7 @@ class BoatController extends Controller
         // 2. Fetch ALL boats in the system (to display on the map)
         $allBoats = Boat::all();
 
-        // 3. Fetch the latest weather report (or use default values if empty)
+        // 3. Fetch the latest weather report (Keep your existing logic)
         $weather = WeatherUpdate::latest()->first() ?? (object)[
             'temperature' => '28°C',
             'condition' => 'Sunny',
@@ -26,8 +27,12 @@ class BoatController extends Controller
             'message' => 'Sea is normal.'
         ];
 
-        // Return the view with all necessary data
-        return view('fisherman', compact('boats', 'allBoats', 'weather'));
+        // 4. [NEW] Get the LIVE signal sent by Coast Guard via Cache
+        // This overrides the database signal if Coast Guard sends a new one
+        $warning_signal = Cache::get('weather_signal', 0);
+
+        // Return view with ALL data (boats, weather, and the live warning signal)
+        return view('fisherman', compact('boats', 'allBoats', 'weather', 'warning_signal'));
     }
 
     // 2. Store a new boat in the database

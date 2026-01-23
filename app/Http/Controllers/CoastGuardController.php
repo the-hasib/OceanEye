@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\SosAlert;
 use App\Models\Boat;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class CoastGuardController extends Controller
 {
@@ -44,5 +45,23 @@ class CoastGuardController extends Controller
         ]);
 
         return back()->with('success', 'Mission Completed!');
+    }
+// [NEW] Function to broadcast danger signal to all fishermen
+    public function sendWarning(Request $request)
+    {
+        // 1. Security Check: Only Coast Guard can access
+        if (Auth::user()->role !== 'coast_guard') {
+            abort(403, 'Unauthorized Access');
+        }
+
+        // 2. Get the signal number (1-10) from the form input
+        $signal = $request->input('signal');
+
+        // 3. Store the signal in Cache memory for 24 hours (1440 mins)
+        // This allows the Fisherman dashboard to read this value later
+        Cache::put('weather_signal', $signal, 1440);
+
+        // 4. Redirect back with a success message
+        return back()->with('warning', "⚠️ HIGH ALERT: Danger Signal #$signal has been broadcast to all boats!");
     }
 }
