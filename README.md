@@ -23,7 +23,6 @@ This is a **3-person group project**:
 
 **Teammates:**
 - [Fardin Mustafi] - Frontend design and development
-- [Tanjim Tisha] - Frontend design and development
 
 So basically, I handle everything on the backend side, and they make it look good on the frontend!
 
