@@ -50,7 +50,7 @@ class CoastGuardController extends Controller
 
         return back()->with('success', 'Mission Completed!');
     }
-// [NEW] Function to broadcast danger signal to all fishermen
+//  Function to broadcast danger signal to all fishermen
     public function sendWarning(Request $request)
     {
         if (Auth::user()->role !== 'coast_guard') {
@@ -58,14 +58,20 @@ class CoastGuardController extends Controller
         }
 
         $signal = $request->input('signal');
-        Cache::put('weather_signal', $signal, 1440);
 
-        // [LOGIC FIXED]
+
+        \Illuminate\Support\Facades\DB::table('weather_updates')->insert([
+            'signal_number' => $signal,
+            'message' => 'Signal Updated by Coast Guard',
+            'temperature' => 32,
+            'condition' => 'Cloudy',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
         if ($signal == 0) {
-
             return back()->with('success', "✅ SIGNAL CLEARED: Sea is now declared Safe for all boats.");
         } else {
-
             return back()->with('warning', "⚠️ HIGH ALERT: Danger Signal #$signal has been broadcast to all boats!");
         }
     }

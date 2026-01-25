@@ -49,18 +49,25 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/boats', [AdminController::class, 'allBoats'])->name('admin.boats');
     Route::delete('/admin/boats/delete/{id}', [AdminController::class, 'deleteBoat'])->name('admin.deleteBoat');
 
-    // SOS Monitor (Admin)
+    // SOS Monitor & Analytics (Admin)
     Route::get('/admin/sos', [SosController::class, 'index'])->name('admin.sos');
     Route::get('/admin/analytics', [AdminController::class, 'analytics'])->name('admin.analytics');
 
 
     // --- Fisherman Routes ---
+    // Note: Ensure BoatController::index returns the 'fisherman' view
     Route::get('/fisherman/dashboard', [BoatController::class, 'index'])->name('fisherman.dashboard');
     Route::post('/boats/store', [BoatController::class, 'store'])->name('boats.store');
     Route::delete('/boats/delete/{id}', [BoatController::class, 'destroy'])->name('boats.delete');
 
-    // SOS Send Signal (Fisherman)
-    Route::post('/sos/send', [SosController::class, 'store'])->name('sos.send');
+    // SOS Send Signal (FIXED: changed 'store' to 'send')
+    Route::post('/sos/send', [SosController::class, 'send'])->name('sos.send');
+
+
+    // --- Coast Guard Routes ---
+    Route::get('/coastguard/dashboard', [CoastGuardController::class, 'index'])->name('coast_guard.dashboard');
+    Route::get('/coastguard/resolve/{id}', [CoastGuardController::class, 'resolve'])->name('sos.resolve'); //  Controller Name here too just in case
+    Route::post('/coastguard/warning', [CoastGuardController::class, 'sendWarning'])->name('coastguard.warning');
 
 
     // --- Main Redirect Logic ---
@@ -68,28 +75,9 @@ Route::middleware(['auth'])->group(function () {
         $role = Auth::user()->role;
 
         if ($role == 'admin') return redirect()->route('admin.dashboard');
-
-        // This name matches the route below now
         if ($role == 'coast_guard') return redirect()->route('coast_guard.dashboard');
 
         return redirect()->route('fisherman.dashboard');
     })->name('dashboard');
-
-});
-
-
-// --- COAST GUARD ROUTES ---
-// Change: Removed 'role:coast_guard' middleware to simplify
-Route::middleware(['auth'])->group(function () {
-   // 1. Dashboard (Uses Controller -> Passes Data)
-    // Note: Use 'coast_guard.dashboard' to match your redirect logic
-    Route::get('/coastguard/dashboard', [App\Http\Controllers\CoastGuardController::class, 'index'])
-        ->name('coast_guard.dashboard');
-    // 2. Action: Resolve SOS
-    Route::get('/coastguard/resolve/{id}', [App\Http\Controllers\CoastGuardController::class, 'resolve'])
-        ->name('sos.resolve');
-    // For send Signal Number
-    Route::post('/coastguard/warning', [App\Http\Controllers\CoastGuardController::class, 'sendWarning'])
-        ->name('coastguard.warning');
 
 });

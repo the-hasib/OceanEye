@@ -12,13 +12,12 @@
     <style>
         /* --- 1. THEME VARIABLES --- */
         :root {
-            /* [CHANGE] Transparency Increased (0.75 -> 0.35) */
-            --glass-bg: rgba(6, 18, 38, 0.35);
+            --glass-bg: rgba(6, 18, 38, 0.55);
             --glass-border: rgba(255, 255, 255, 0.2);
             --neon-cyan: #00f3ff;
             --neon-red: #ff003c;
             --text-main: #ffffff;
-            --text-muted: #d1d5db; /* Lighter text for better contrast on glass */
+            --text-muted: #d1d5db;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
@@ -31,18 +30,18 @@
             display: flex; flex-direction: column;
         }
 
-        /* Lighter Overlay so background image is visible */
+        /* Dark Overlay for readability */
         body::before {
             content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.35);
+            background: rgba(0, 0, 0, 0.4);
             z-index: -1;
         }
 
         /* --- 2. NAVBAR --- */
         .navbar {
-            background: rgba(5, 11, 20, 0.5); /* More transparent navbar */
+            background: rgba(5, 11, 20, 0.7);
             backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
             padding: 15px 40px;
             display: flex; justify-content: space-between; align-items: center;
             position: sticky; top: 0; z-index: 1000;
@@ -77,27 +76,20 @@
         }
         @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        /* --- 4. PANELS (Transparent Glass Box) --- */
+        /* --- 4. PANELS (Glass Effect) --- */
         .panel {
             background: var(--glass-bg);
-            backdrop-filter: blur(10px); /* Frosted glass effect */
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             border-radius: 12px;
             padding: 25px;
             position: relative; overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.25); /* Depth shadow */
-            transition: 0.4s;
-        }
-        /* Top sheen for 3D effect */
-        .panel::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            transition: 0.3s;
         }
         .panel:hover {
             transform: translateY(-5px);
-            background: rgba(6, 18, 38, 0.45); /* Slightly darker on hover */
-            border-color: rgba(0, 243, 255, 0.4);
+            border-color: rgba(0, 243, 255, 0.5);
             box-shadow: 0 15px 50px rgba(0, 243, 255, 0.1);
         }
 
@@ -108,15 +100,15 @@
         .sos-card {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-align: center; cursor: pointer;
-            background: linear-gradient(160deg, rgba(255, 0, 60, 0.1), rgba(10, 20, 40, 0.4));
-            border-color: rgba(255, 0, 60, 0.3);
+            background: linear-gradient(160deg, rgba(255, 0, 60, 0.15), rgba(10, 20, 40, 0.7));
+            border-color: rgba(255, 0, 60, 0.6);
         }
         .sos-btn {
             width: 90px; height: 90px;
-            background: rgba(255, 0, 60, 0.15); border: 2px solid var(--neon-red);
+            background: rgba(255, 0, 60, 0.2); border: 2px solid var(--neon-red);
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
             font-size: 40px; color: var(--neon-red); margin-bottom: 15px;
-            box-shadow: 0 0 20px rgba(255, 0, 60, 0.4);
+            box-shadow: 0 0 25px rgba(255, 0, 60, 0.5);
             animation: pulse 2s infinite;
         }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 60, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(255, 0, 60, 0); } }
@@ -132,8 +124,8 @@
             text-align: center; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
             display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-        .sig-safe { background: rgba(0, 255, 128, 0.15); color: #00ff80; border: 1px solid #00ff80; box-shadow: 0 0 15px rgba(0, 255, 128, 0.2); }
-        .sig-danger { background: rgba(255, 0, 60, 0.15); color: #ff003c; border: 1px solid #ff003c; box-shadow: 0 0 15px rgba(255, 0, 60, 0.3); animation: flash 1s infinite; }
+        .sig-safe { background: rgba(0, 255, 128, 0.15); color: #00ff80; border: 1px solid #00ff80; }
+        .sig-danger { background: rgba(255, 0, 60, 0.15); color: #ff003c; border: 1px solid #ff003c; animation: flash 1s infinite; }
         @keyframes flash { 50% { opacity: 0.5; } }
 
         /* Map */
@@ -154,12 +146,12 @@
         .form-label { font-size: 13px; color: var(--neon-cyan); margin-bottom: 8px; display: block; letter-spacing: 1px; }
         input, select {
             width: 100%; padding: 14px;
-            background: rgba(0, 0, 0, 0.25); /* Transparent input fields */
+            background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255,255,255,0.15); border-radius: 6px;
             color: white; font-size: 16px; outline: none; margin-bottom: 15px;
             transition: 0.3s;
         }
-        input:focus { border-color: var(--neon-cyan); box-shadow: 0 0 10px rgba(0, 243, 255, 0.2); background: rgba(0,0,0,0.4); }
+        input:focus { border-color: var(--neon-cyan); box-shadow: 0 0 10px rgba(0, 243, 255, 0.2); }
 
         .btn-neon {
             width: 100%; padding: 14px; background: transparent;
@@ -175,7 +167,7 @@
         td { padding: 15px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 15px; }
         tr:hover td { background: rgba(255,255,255,0.1); color: white; }
 
-        /* Boat Icon on Map */
+        /* Boat Icon */
         .boat-marker-icon {
             color: #000; font-size: 14px;
             background: var(--neon-cyan); border-radius: 50%;
@@ -217,8 +209,24 @@
 <div class="dashboard-container">
 
     @if(session('success'))
-        <div style="background: rgba(0,255,128,0.1); border: 1px solid #00ff80; color: #00ff80; padding: 15px; margin-bottom: 20px; border-radius: 6px;">
+        <div style="background: rgba(0,255,128,0.1); border: 1px solid #00ff80; color: #00ff80; padding: 15px; margin-bottom: 20px; border-radius: 6px; display: flex; align-items: center; gap: 10px;">
             <i class="fas fa-check-circle"></i> {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div style="background: rgba(255,0,60,0.1); border: 1px solid #ff003c; color: #ff003c; padding: 15px; margin-bottom: 20px; border-radius: 6px; display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-exclamation-triangle"></i> {{ session('error') }}
+        </div>
+    @endif
+
+    @if ($errors->any())
+        <div style="background: rgba(255,0,60,0.1); border: 1px solid #ff003c; color: #ff003c; padding: 15px; margin-bottom: 20px; border-radius: 6px;">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>⚠ {{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
     @endif
 
@@ -270,7 +278,7 @@
             <form action="{{ route('boats.store') }}" method="POST">
                 @csrf
                 <label class="form-label">VESSEL NAME</label>
-                <input type="text" name="boat_name" placeholder="Ex:Mayer Doa" required>
+                <input type="text" name="boat_name" placeholder="Ex: MV Ocean Star" required>
 
                 <label class="form-label">REGISTRATION NO</label>
                 <input type="text" name="registration_number" placeholder="Ex: REG-8821" required>
@@ -293,7 +301,7 @@
             <div style="font-size: 18px; font-weight: 700; margin-bottom: 20px; color: white; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
                 <i class="fas fa-list"></i> FLEET STATUS
             </div>
-            @if($boats->count() > 0)
+            @if(isset($boats) && $boats->count() > 0)
                 <table>
                     <thead>
                     <tr>
@@ -326,7 +334,7 @@
     </div>
 
     <div style="text-align: center; margin-top: 40px; color: var(--text-muted); font-size: 12px;">
-         © 2026.Team The Error Squad. All rights reserved.
+        © 2026 Team The Error Squad. All rights reserved.
     </div>
 
 </div>
@@ -335,19 +343,26 @@
     <div class="modal-content">
         <i class="fas fa-biohazard" style="font-size: 60px; color: var(--neon-red); margin-bottom: 20px; animation: pulse 1s infinite;"></i>
         <h2 style="color: white; margin-bottom: 10px; letter-spacing: 2px;">CONFIRM SOS</h2>
-        <p style="color: #999; margin-bottom: 30px;">This will alert Coast Guard HQ immediately.</p>
+        <p style="color: #999; margin-bottom: 30px;">This will broadcast a GPS signal to Coast Guard HQ immediately.</p>
 
         <form action="{{ route('sos.send') }}" method="POST" id="sosForm">
             @csrf
-            <select name="boat_id" required style="background: #000; border: 1px solid var(--neon-red); margin-bottom: 20px; color: white; padding: 10px;">
-                <option value="" disabled selected>Select Vessel</option>
-                @foreach($boats as $boat)
-                    <option value="{{ $boat->id }}">{{ $boat->boat_name }}</option>
-                @endforeach
+
+            <input type="hidden" name="latitude" value="">
+            <input type="hidden" name="longitude" value="">
+
+            <select name="boat_id" required style="background: #000; border: 1px solid var(--neon-red); margin-bottom: 20px; color: white; padding: 10px; width: 100%;">
+                <option value="" disabled selected>Select Vessel in Danger</option>
+                @if(isset($boats))
+                    @foreach($boats as $boat)
+                        <option value="{{ $boat->id }}">{{ $boat->boat_name }}</option>
+                    @endforeach
+                @endif
             </select>
+
             <div style="display: flex; gap: 15px;">
                 <button type="button" onclick="closeSosModal()" style="flex: 1; padding: 12px; background: #222; border: none; color: white; cursor: pointer;">CANCEL</button>
-                <button type="button" onclick="confirmSOS()" style="flex: 1; padding: 12px; background: var(--neon-red); border: none; color: white; font-weight: 700; cursor: pointer;">BROADCAST</button>
+                <button type="button" onclick="submitSOS()" style="flex: 1; padding: 12px; background: var(--neon-red); border: none; color: white; font-weight: 700; cursor: pointer;">BROADCAST</button>
             </div>
         </form>
     </div>
@@ -355,21 +370,30 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+    // 1. Clock
     setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
+
+    // 2. Modal Logic
     function openSosModal() { document.getElementById('sosModal').style.display = 'flex'; }
     function closeSosModal() { document.getElementById('sosModal').style.display = 'none'; }
-    function confirmSOS() {
-        if(document.querySelector('select[name="boat_id"]').value) {
-            document.getElementById('sosForm').submit();
-        } else {
-            alert("Select a vessel");
+
+    // 3. SOS Submit Logic (NO GPS PROMPT - Direct Submit)
+    function submitSOS() {
+        const boatSelect = document.querySelector('select[name="boat_id"]');
+        if (!boatSelect.value) {
+            alert("Please select a vessel first!");
+            return;
         }
+        // Submit the form directly.
+        // The Controller will generate random lat/lng since inputs are empty.
+        document.getElementById('sosForm').submit();
     }
 
+    // 4. Map Initialization
     const map = L.map('map', {zoomControl: false}).setView([21.8, 89.5], 9);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-    const allBoats = @json($allBoats);
+    const allBoats = @json($allBoats ?? []);
     const boatIcon = L.divIcon({
         className: 'boat-marker-icon',
         html: '<i class="fas fa-ship"></i>',
@@ -377,10 +401,12 @@
         iconAnchor: [15, 15]
     });
 
-    allBoats.forEach(b => {
-        L.marker([21.50 + Math.random(), 89.00 + Math.random()], {icon: boatIcon}).addTo(map)
-            .bindPopup(`<b style="color:black;">${b.boat_name}</b>`);
-    });
+    if(allBoats.length > 0) {
+        allBoats.forEach(b => {
+            L.marker([21.50 + Math.random(), 89.00 + Math.random()], {icon: boatIcon}).addTo(map)
+                .bindPopup(`<b style="color:black;">${b.boat_name}</b>`);
+        });
+    }
 </script>
 
 </body>

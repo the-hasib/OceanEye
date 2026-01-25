@@ -12,7 +12,6 @@
     <style>
         /* --- 1. OPTIMIZED THEME SETTINGS --- */
         :root {
-            /* High Opacity Background (Faster than Blur) */
             --glass-bg: rgba(6, 18, 38, 0.85);
             --glass-border: rgba(255, 255, 255, 0.15);
             --neon-cyan: #00f3ff;
@@ -33,7 +32,6 @@
             display: flex; flex-direction: column;
         }
 
-        /* Simple Dark Overlay (Faster Rendering) */
         body::before {
             content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.4);
@@ -42,7 +40,7 @@
 
         /* --- 2. TOPBAR --- */
         .topbar {
-            background: rgba(5, 15, 30, 0.95); /* Solid transparent look */
+            background: rgba(5, 15, 30, 0.95);
             border-bottom: 1px solid var(--glass-border);
             padding: 16px 22px;
             display:flex; justify-content:space-between; align-items: center;
@@ -50,11 +48,12 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
 
+        /* UPDATED BRAND STYLE */
         .brand {
-            font-size: 24px; font-weight: 700; color: white;
-            text-transform: uppercase; letter-spacing: 1px;
+            font-size: 26px; font-weight: 700; color: white;
+            text-transform: uppercase; letter-spacing: 2px;
             display: flex; align-items: center; gap: 10px;
-            text-shadow: 0 0 10px var(--neon-cyan);
+            text-shadow: 0 0 15px var(--neon-cyan);
         }
 
         .user-info { display: flex; align-items: center; gap: 10px; font-weight: 600; color: var(--neon-cyan); font-size: 14px; }
@@ -78,7 +77,7 @@
         }
         .side-cards { display:flex; flex-direction:column; gap:15px; }
 
-        /* --- 4. PANELS (Removed Blur for Speed) --- */
+        /* --- 4. PANELS --- */
         .info-card {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
@@ -88,7 +87,6 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             transition: 0.2s;
         }
-        /* Top Highlight for 3D Effect */
         .info-card::after {
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
@@ -105,14 +103,13 @@
         }
         .info-card p { font-size: 14px; color: var(--text-main); margin-bottom: 4px; }
 
-        /* Accents */
         .info-card.alert { border-left: 4px solid var(--neon-red); }
         .info-card.success { border-left: 4px solid var(--neon-green); }
 
         /* --- 5. FORMS --- */
         select {
             width: 100%; padding: 8px;
-            background: rgba(255, 255, 255, 0.1); /* Lighter bg */
+            background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255,255,255,0.2); border-radius: 5px;
             color: white; outline: none; font-size: 13px;
             transition: 0.3s;
@@ -125,7 +122,7 @@
         }
         .btn-broadcast:hover { background: var(--neon-red); color: white; }
 
-        /* --- 6. MAP (Fast Render) --- */
+        /* --- 6. MAP --- */
         .map-section {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
@@ -149,7 +146,6 @@
         td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; color: white; }
         tbody tr:hover { background: rgba(255,255,255,0.05); }
 
-        /* Buttons */
         .btn-resolve {
             background: transparent; border: 1px solid var(--neon-green); color: var(--neon-green);
             padding: 6px 12px; border-radius: 4px; cursor: pointer; text-decoration: none; font-size: 12px; font-weight: 700;
@@ -157,7 +153,6 @@
         }
         .btn-resolve:hover { background: var(--neon-green); color: black; }
 
-        /* Animation */
         @keyframes blink { 50% { opacity: 0.5; } }
         .blink-red { animation: blink 1s infinite; color: var(--neon-red); text-shadow: 0 0 10px var(--neon-red); }
 
@@ -167,7 +162,8 @@
 <body>
 
 <header class="topbar">
-    <div class="brand">🌊 <strong>OceanEye</strong> – Coast Guard Unit</div>
+    <div class="brand"><i class="fas fa-water"></i> OceanEye <span style="font-size: 14px; opacity: 0.7; margin-left: 10px; font-weight: normal;">| COAST GUARD</span></div>
+
     <div class="user-info">
         <span id="time" style="font-family: monospace;">Loading...</span>
         <span>| {{ Auth::user()->name ?? 'Officer' }}</span>
