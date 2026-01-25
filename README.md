@@ -65,14 +65,14 @@ This is my first real backend project, and I'm learning:
 Started coding in 3rd January 2026 , so still learning but making progress!
 
 ## Project Structure
-```
+
+
 OceanEye/
 ├── app/                    # Backend logic (my work)
 ├── database/              # Database files (my work)
 ├── resources/views/       # Frontend pages (team work + my login/reg pages)
 ├── routes/                # URLs and routing (my work)
 └── tests/                 # Testing files (my work)
-```
 
 ## Our Plan
 
@@ -81,9 +81,12 @@ OceanEye/
 **Future:** Make it fully functional with all safety features
 
 ## About
-
 **Course:** Database Management Systems  
-**Started:** 3rd January 2026 
 **Status:** Learning and building!
+##
+<img width="1160" height="791" alt="Screenshot 2026-01-25 at 1 51 28 pm" src="https://github.com/user-attachments/assets/00affaa7-1f2c-4767-ace4-482543285e49" />
+
+
+
 
 ---
