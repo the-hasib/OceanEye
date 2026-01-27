@@ -51,8 +51,8 @@ So basically, I handle everything on the backend side, and they make it look goo
 - API development
 
 **Frontend (Team's work):**
-- HTML, CSS, JavaScript
-- Responsive design
+- HTML, CSS, JavaScript.
+- Responsive design.
 ## What I'm Learning
 
 This is my first real backend project, and I'm learning:
