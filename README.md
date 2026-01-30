@@ -1,3 +1,7 @@
+<img width="1160" height="791" alt="Screenshot 2026-01-25 at 1 51 28 pm" src="https://github.com/user-attachments/assets/00affaa7-1f2c-4767-ace4-482543285e49" />
+
+
+
 #  OceanEye
 
 A marine safety system to help protect fishermen at sea. This is our DBMS course group project.
@@ -84,7 +88,6 @@ OceanEye/
 **Course:** Database Management Systems  
 **Status:** Learning and building!
 ##
-<img width="1160" height="791" alt="Screenshot 2026-01-25 at 1 51 28 pm" src="https://github.com/user-attachments/assets/00affaa7-1f2c-4767-ace4-482543285e49" />
 
 
 
