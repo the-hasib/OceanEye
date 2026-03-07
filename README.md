@@ -3,7 +3,6 @@
 
 
 #  OceanEye
-
 A marine safety system to help protect fishermen at sea. This is our DBMS course group project.
 
 ## The Problem We're Trying to Solve
